@@ -105,3 +105,110 @@
     "message": "如果自动激活失败，请在扩展程序中手动输入许可证密钥。"
   }
 } 
+{
+  "extensionName": {
+    "message": "像素猫"
+  },
+  "extensionDescription": {
+    "message": "可爱的像素猫会在你的屏幕上漫步！"
+  },
+  "catActivation": {
+    "message": "猫咪激活"
+  },
+  "followMouse": {
+    "message": "跟随鼠标"
+  },
+  "moveSpeed": {
+    "message": "速度"
+  },
+  "catSize": {
+    "message": "大小"
+  },
+  "catSkin": {
+    "message": "皮肤"
+  },
+  "freeRoaming": {
+    "message": "自由漫步"
+  },
+  "followingMouse": {
+    "message": "跟随鼠标"
+  },
+  "catInactive": {
+    "message": "猫咪未激活"
+  },
+  "welcomeMessage": {
+    "message": "可爱的猫咪正在你的屏幕上漫步"
+  },
+  "saved": {
+    "message": "✅ 设置已保存！"
+  },
+  "followingMouseStatus": {
+    "message": "🎯 跟随鼠标中"
+  },
+  "freeRoamingStatus": {
+    "message": "🚶‍♂️ 自由漫步中"
+  },
+  "catInactiveStatus": {
+    "message": "😴 小猫休息中"
+  },
+  "premiumSkinPurchase": {
+    "message": "高级皮肤购买"
+  },
+  "pixelCatExtension": {
+    "message": "像素猫扩展程序"
+  },
+  "priceKRW": {
+    "message": "¥20"
+  },
+  "includedPremiumSkins": {
+    "message": "包含的高级皮肤"
+  },
+  "greydogSkin": {
+    "message": "灰色小狗皮肤"
+  },
+  "blackdogSkin": {
+    "message": "黑色小狗皮肤"
+  },
+  "yellowdogSkin": {
+    "message": "黄色小狗皮肤"
+  },
+  "futureSkinsIncluded": {
+    "message": "包含所有未来高级皮肤"
+  },
+  "lifetimeAccess": {
+    "message": "终身使用"
+  },
+  "payWithPaypal": {
+    "message": "💳 使用PayPal支付"
+  },
+  "payWithToss": {
+    "message": "💳 使用Toss支付"
+  },
+  "goBack": {
+    "message": "← 返回"
+  },
+  "paymentCompleted": {
+    "message": "🎉 支付完成！"
+  },
+  "premiumSkinPurchaseCompleted": {
+    "message": "高级皮肤购买已成功完成。"
+  },
+  "autoActivationInProgress": {
+    "message": "⚡ 自动激活进行中..."
+  },
+  "autoActivatingExtension": {
+    "message": "正在扩展程序中自动激活。"
+  },
+  "connectionAttempt": {
+    "message": "连接尝试中..."
+  },
+  "licenseKey": {
+    "message": "许可证密钥："
+  },
+  "copyToClipboard": {
+    "message": "📋 复制"
+  },
+  "autoActivationFailureNote": {
+    "message": "如果自动激活失败，请在扩展程序中手动输入许可证密钥。"
+  }
+} 
