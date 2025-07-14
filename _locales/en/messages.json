@@ -1,0 +1,107 @@
+{
+  "extensionName": {
+    "message": "Pixel Cat"
+  },
+  "extensionDescription": {
+    "message": "A cute pixel cat will roam around your screen!"
+  },
+  "catActivation": {
+    "message": "Cat Activation"
+  },
+  "followMouse": {
+    "message": "Follow Mouse"
+  },
+  "moveSpeed": {
+    "message": "Speed"
+  },
+  "catSize": {
+    "message": "Size"
+  },
+  "catSkin": {
+    "message": "Skin"
+  },
+  "freeRoaming": {
+    "message": "Free Roaming"
+  },
+  "followingMouse": {
+    "message": "Following Mouse"
+  },
+  "catInactive": {
+    "message": "Cat Inactive"
+  },
+  "welcomeMessage": {
+    "message": "A cute cat is roaming around your screen"
+  },
+  "saved": {
+    "message": "✅ Settings saved!"
+  },
+  "followingMouseStatus": {
+    "message": "🎯 Following Mouse"
+  },
+  "freeRoamingStatus": {
+    "message": "🚶‍♂️ Free Roaming"
+  },
+  "catInactiveStatus": {
+    "message": "😴 Cat Sleeping"
+  },
+  "premiumSkinPurchase": {
+    "message": "Premium Skin Purchase"
+  },
+  "pixelCatExtension": {
+    "message": "Pixel Cat Extension"
+  },
+  "priceKRW": {
+    "message": "$3.00"
+  },
+  "includedPremiumSkins": {
+    "message": "Included Premium Skins"
+  },
+  "greydogSkin": {
+    "message": "Grey Dog Skin"
+  },
+  "blackdogSkin": {
+    "message": "Black Dog Skin"
+  },
+  "yellowdogSkin": {
+    "message": "Yellow Dog Skin"
+  },
+  "futureSkinsIncluded": {
+    "message": "All future premium skins included"
+  },
+  "lifetimeAccess": {
+    "message": "Lifetime access"
+  },
+  "payWithPaypal": {
+    "message": "💳 Pay with PayPal"
+  },
+  "payWithToss": {
+    "message": "💳 Pay with Toss"
+  },
+  "goBack": {
+    "message": "← Go Back"
+  },
+  "paymentCompleted": {
+    "message": "🎉 Payment Completed!"
+  },
+  "premiumSkinPurchaseCompleted": {
+    "message": "Premium skin purchase completed successfully."
+  },
+  "autoActivationInProgress": {
+    "message": "⚡ Auto-activation in progress..."
+  },
+  "autoActivatingExtension": {
+    "message": "Auto-activating in the extension."
+  },
+  "connectionAttempt": {
+    "message": "Connecting..."
+  },
+  "licenseKey": {
+    "message": "License Key:"
+  },
+  "copyToClipboard": {
+    "message": "📋 Copy"
+  },
+  "autoActivationFailureNote": {
+    "message": "If auto-activation fails, please manually enter the license key in the extension."
+  }
+} 
