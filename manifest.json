@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extensionName__",
+  "version": "1.0.0",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "ko",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["cat-pixel-sprites.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "identity",
+    "identity.email",
+    "tabs"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["skins/yellowCat.png", "skins/greyCat.png", "skins/calicoCat.png", "skins/yellowCat_icon.png", "skins/greyCat_icon.png", "skins/calicoCat_icon.png", "skins/greyDog.PNG", "skins/blackDog.PNG", "skins/yellowDog.PNG", "skins/greyDog_icon.PNG", "skins/blackDog_icon.PNG", "skins/yellowDog_icon.PNG", "01.payment-example.html", "user-info.js", "secure-license-manager.js", "payment-script-secure.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "externally_connectable": {
+    "matches": ["https://your-payment-site.com/*", "https://localhost:3000/*"]
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "action": {
+     "default_popup": "00.popup.html",
+    "default_title": "픽셀 고양이"
+  }
+} 

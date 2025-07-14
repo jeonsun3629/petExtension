@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">픽셀 고양이 - 프리미엄 스킨 구매</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .features {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .features h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        
+        .features ul {
+            list-style: none;
+        }
+        
+        .features li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .features li::before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+        }
+        
+        .payment-buttons {
+            margin: 30px 0;
+        }
+        
+        .payment-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .paypal-btn {
+            background: linear-gradient(45deg, #0070ba, #003087);
+        }
+        
+        .paypal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 112, 186, 0.4);
+        }
+        
+        .toss-btn {
+            background: linear-gradient(45deg, #3182f6, #1c6dd0);
+        }
+        
+        .toss-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(49, 130, 246, 0.4);
+        }
+        
+        .back-btn {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .back-btn:hover {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+        }
+        
+        .success-message {
+            background: linear-gradient(45deg, #22c55e, #16a34a);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .license-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin: 15px 0;
+            border: 2px dashed #ffd700;
+            color: #ffd700;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        .auto-activation {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .activating {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="mainTitle">🌟 프리미엄 스킨 구매</h1>
+        <p id="subtitle" class="subtitle">픽셀 고양이 확장 프로그램</p>
+        
+        <div id="price" class="price">₩3,000</div>
+        
+        <div class="features">
+            <h3 id="featuresTitle">포함된 프리미엄 스킨</h3>
+            <ul>
+                <li id="greydogSkin">회색 강아지 스킨</li>
+                <li id="blackdogSkin">검은 강아지 스킨</li>
+                <li id="yellowdogSkin">노란 강아지 스킨</li>
+                <li id="futureSkinsIncluded">향후 추가될 모든 프리미엄 스킨</li>
+                <li id="lifetimeAccess">평생 사용 가능</li>
+            </ul>
+        </div>
+        
+        <div id="paymentSection" class="payment-buttons">
+            <button id="paypalBtn" class="payment-btn paypal-btn">
+                💳 PayPal로 결제하기
+            </button>
+            <button id="tossBtn" class="payment-btn toss-btn">
+                💳 토스로 결제하기
+            </button>
+            <button id="backBtn" class="payment-btn back-btn">
+                ← 뒤로가기
+            </button>
+        </div>
+        
+        <div id="successSection" class="success-message">
+            <h2 id="paymentCompletedTitle">🎉 결제 완료!</h2>
+            <p id="purchaseCompletedMsg">프리미엄 스킨 구매가 완료되었습니다.</p>
+            
+            <div class="auto-activation">
+                <h3 id="autoActivationTitle">⚡ 자동 활성화 진행중...</h3>
+                <p id="autoActivationMsg">확장 프로그램에 자동으로 활성화 중입니다.</p>
+                <div id="activationStatus">연결 시도 중...</div>
+            </div>
+            
+            <p><strong id="licenseKeyLabel">라이센스 키:</strong></p>
+            <div id="licenseCode" class="license-code"></div>
+            <button id="copyBtn" class="copy-btn">📋 복사하기</button>
+            
+            <p id="failureNote" style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+                자동 활성화가 실패한 경우, 위 라이센스 키를 확장 프로그램에 직접 입력해주세요.
+            </p>
+        </div>
+    </div>
+
+    <!-- i18n 초기화 스크립트 -->
+    <script>
+        // Chrome Extension 환경에서 i18n 메시지로 텍스트 설정
+        function initializeI18n() {
+            // chrome.i18n API가 있는지 확인 (Chrome Extension 환경)
+            if (typeof chrome !== 'undefined' && chrome.i18n) {
+                // 페이지 제목
+                document.title = chrome.i18n.getMessage('premiumSkinPurchase') + ' - ' + chrome.i18n.getMessage('pixelCatExtension');
+                document.getElementById('pageTitle').textContent = document.title;
+                
+                // 메인 타이틀
+                document.getElementById('mainTitle').innerHTML = '🌟 ' + chrome.i18n.getMessage('premiumSkinPurchase');
+                
+                // 서브타이틀
+                document.getElementById('subtitle').textContent = chrome.i18n.getMessage('pixelCatExtension');
+                
+                // 가격
+                document.getElementById('price').textContent = chrome.i18n.getMessage('priceKRW');
+                
+                // 기능 목록
+                document.getElementById('featuresTitle').textContent = chrome.i18n.getMessage('includedPremiumSkins');
+                document.getElementById('greydogSkin').textContent = chrome.i18n.getMessage('greydogSkin');
+                document.getElementById('blackdogSkin').textContent = chrome.i18n.getMessage('blackdogSkin');
+                document.getElementById('yellowdogSkin').textContent = chrome.i18n.getMessage('yellowdogSkin');
+                document.getElementById('futureSkinsIncluded').textContent = chrome.i18n.getMessage('futureSkinsIncluded');
+                document.getElementById('lifetimeAccess').textContent = chrome.i18n.getMessage('lifetimeAccess');
+                
+                // 결제 버튼
+                document.getElementById('paypalBtn').textContent = chrome.i18n.getMessage('payWithPaypal');
+                document.getElementById('tossBtn').textContent = chrome.i18n.getMessage('payWithToss');
+                document.getElementById('backBtn').textContent = chrome.i18n.getMessage('goBack');
+                
+                // 성공 메시지
+                document.getElementById('paymentCompletedTitle').textContent = chrome.i18n.getMessage('paymentCompleted');
+                document.getElementById('purchaseCompletedMsg').textContent = chrome.i18n.getMessage('premiumSkinPurchaseCompleted');
+                document.getElementById('autoActivationTitle').textContent = chrome.i18n.getMessage('autoActivationInProgress');
+                document.getElementById('autoActivationMsg').textContent = chrome.i18n.getMessage('autoActivatingExtension');
+                document.getElementById('activationStatus').textContent = chrome.i18n.getMessage('connectionAttempt');
+                document.getElementById('licenseKeyLabel').textContent = chrome.i18n.getMessage('licenseKey');
+                document.getElementById('copyBtn').textContent = chrome.i18n.getMessage('copyToClipboard');
+                document.getElementById('failureNote').textContent = chrome.i18n.getMessage('autoActivationFailureNote');
+            }
+        }
+
+        // DOM이 로드되면 i18n 초기화 실행
+        document.addEventListener('DOMContentLoaded', initializeI18n);
+    </script>
+
+    <!-- CSP 호환 스크립트 -->
+    <script src="user-info.js"></script>
+    <script src="secure-license-manager.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AQqclewa..."></script>
+    <script src="https://js.tosspayments.com/v2"></script>
+    <script src="payment-script-secure.js"></script>
+</body>
+</html> 
