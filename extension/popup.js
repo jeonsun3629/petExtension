@@ -411,6 +411,7 @@ class CatController {
 
   unlockPremiumSkins() {
     document.querySelectorAll('.skin-option.premium').forEach(skinElement => {
+      skinElement.classList.add('unlocked');
       skinElement.classList.remove('locked');
       skinElement.style.filter = 'none';
       skinElement.style.opacity = '1';
