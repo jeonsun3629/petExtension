@@ -1,0 +1,20 @@
+{
+  "name": "pixel-pet-extension",
+  "version": "1.0.0",
+  "description": "픽셀 펫 크롬 확장 프로그램",
+  "scripts": {
+    "build": "cd build && node build.js",
+    "build:dev": "cd build && node build.js --dev",
+    "build:prod": "cd build && node build.js --prod",
+    "package": "npm run build:prod && cd build && node package.js",
+    "clean": "cd build && node scripts/clean.js"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "fs-extra": "^11.1.1",
+    "archiver": "^5.3.1"
+  },
+  "keywords": ["chrome-extension", "pixel-pet", "cat", "dog"],
+  "author": "Your Name",
+  "license": "MIT"
+} 
