@@ -3,38 +3,38 @@
 // 스킨별 구성 정보 - 모듈식 확장 가능
 const skinConfigs = {
   'yellow': {
-    file: 'skins/yellowCat.png',
+    file: 'assets/skins/yellowCat.png',
     cols: 4, rows: 8,
     animations: ['walk-front', 'walk-right', 'walk-back', 'walk-left', 'sit', 'sit-groom', 'lie', 'sleep'],
     fallbacks: {}
   },
   'grey': {
-    file: 'skins/greyCat.png', 
+    file: 'assets/skins/greyCat.png', 
     cols: 4, rows: 8,
     animations: ['walk-front', 'walk-right', 'walk-back', 'walk-left', 'sit', 'sit-groom', 'lie', 'sleep'],
     fallbacks: {}
   },
   'calico': {
-    file: 'skins/calicoCat.png',
+    file: 'assets/skins/calicoCat.png',
     cols: 4, rows: 6,
     animations: ['walk-front', 'walk-right', 'walk-back', 'walk-left', 'sit', 'sit-groom'],
     fallbacks: { 'lie': 'sit', 'sleep': 'sit-groom' }
   },
   // 프리미엄 스킨들
   'greyDog': {
-    file: 'skins/greyDog.PNG',
+    file: 'assets/skins/greyDog.PNG',
     cols: 4, rows: 8,
     animations: ['walk-front', 'walk-right', 'walk-back', 'walk-left', 'sit', 'sit-groom', 'lie', 'sleep'],
     fallbacks: {}
   },
   'blackDog': {
-    file: 'skins/blackDog.PNG',
+    file: 'assets/skins/blackDog.PNG',
     cols: 4, rows: 8,
     animations: ['walk-front', 'walk-right', 'walk-back', 'walk-left', 'sit', 'sit-groom', 'lie', 'sleep'],
     fallbacks: {}
   },
   'yellowDog': {
-    file: 'skins/yellowDog.PNG',
+    file: 'assets/skins/yellowDog.PNG',
     cols: 4, rows: 8,
     animations: ['walk-front', 'walk-right', 'walk-back', 'walk-left', 'sit', 'sit-groom', 'lie', 'sleep'],
     fallbacks: {}
