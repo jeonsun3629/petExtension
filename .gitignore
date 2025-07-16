@@ -16,8 +16,6 @@ secrets.json
 api-keys.json
 credentials.json
 
-<<<<<<< HEAD
-=======
 # 새로운 빌드 시스템 관련
 # ========================
 /dist/
@@ -26,7 +24,6 @@ credentials.json
 !backend/background.template.js
 !backend/background.js.backup
 
->>>>>>> master
 # 결제 관련 설정 파일
 # ==================
 payment-config.js

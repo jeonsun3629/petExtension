@@ -11,20 +11,11 @@
 
 ## 🚀 설치 방법
 
-<<<<<<< HEAD
-### 1. 개발자 모드로 설치
-=======
 ### 1. 개발자 모드로 설치 (개발자용)
->>>>>>> master
 
 1. **Chrome 브라우저**를 열고 주소창에 `chrome://extensions/` 입력
 2. 우측 상단의 **"개발자 모드"** 토글을 켭니다
 3. **"압축해제된 확장 프로그램을 로드합니다"** 버튼 클릭
-<<<<<<< HEAD
-4. `catExtension` 폴더를 선택합니다
-5. 익스텐션이 설치되면 완료!
-
-=======
 4. `dist` 폴더를 선택합니다 (빌드 완료 후)
 5. 익스텐션이 설치되면 완료!
 
@@ -48,7 +39,6 @@ npm run build:dev
 
 자세한 내용은 [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)를 참조하세요.
 
->>>>>>> master
 ### 2. 사용법
 
 - 익스텐션이 설치되면 **모든 웹페이지**에서 픽셀 고양이가 나타납니다
@@ -74,22 +64,6 @@ npm run build:dev
 ## 📁 파일 구조
 
 ```
-<<<<<<< HEAD
-catExtension/
-├── 00.popup.html      # 팝업 UI (보안 모드)
-├── 01.payment-example.html    # 결제 시뮬레이션 페이지
-├── 02.test-manual-license.html # 수동 라이선스 테스트
-├── 03.cleanup-test-data.html   # 테스트 데이터 정리
-├── manifest.json      # 익스텐션 설정
-├── background.js      # 백그라운드 서비스 워커 (보안 API 관리)
-├── content.js         # 메인 로직 (픽셀 고양이)
-├── cat-sprites.css    # 고양이 스프라이트 & 애니메이션
-├── popup-secure.js    # 팝업 컨트롤러 (보안 모드)
-├── secure-license-manager.js  # 라이선스 관리 (보안 모드)
-├── user-info.js       # 사용자 정보 관리
-├── payment-script-secure.js   # 결제 처리 (보안 모드)
-└── README.md         # 사용법
-=======
 pixel-pet-extension/
 ├── 📁 extension/                    # 크롬 익스텐션 소스
 │   ├── manifest.json              # 확장 프로그램 메타데이터
@@ -131,7 +105,6 @@ pixel-pet-extension/
 ├── package.json                   # 프로젝트 설정
 ├── .gitignore                     # Git 무시 파일
 └── README.md                      # 이 파일
->>>>>>> master
 ```
 
 ## 🎯 특징
@@ -140,12 +113,9 @@ pixel-pet-extension/
 - **반응형**: 화면 크기에 맞춰 경계 인식
 - **성능 최적화**: RequestAnimationFrame 사용
 - **메모리 안전**: 페이지 언로드 시 자동 정리
-<<<<<<< HEAD
-=======
 - **🔒 보안 강화**: 환경변수 기반 API 키 관리
 - **🚀 자동 빌드**: 개발/운영 환경 자동 분리
 - **🛡️ 서버 검증**: 모든 라이선스 검증 백엔드 처리
->>>>>>> master
 
 ## 🐾 즐거운 고양이 라이프!
 
