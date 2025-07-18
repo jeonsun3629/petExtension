@@ -363,7 +363,7 @@ class CatController {
   }
 
   openPaymentPage(paymentMethod) {
-    const paymentUrl = chrome.runtime.getURL('01.payment-example.html') + `?method=${paymentMethod}`;
+    const paymentUrl = `https://jeonsun3629.github.io/petExtension/payment.html?method=${paymentMethod}`;
     chrome.tabs.create({ url: paymentUrl });
     this.closePremiumModal();
   }
@@ -404,9 +404,29 @@ class CatController {
   }
 
   async verifyLicenseKey(licenseKey) {
-    // 간단한 라이센스 키 패턴 검증
-    const licensePattern = /^[A-Z]{2}\d{8}[A-Z0-9]{8}$/;
-    return licensePattern.test(licenseKey);
+    try {
+      console.log('라이센스 검증 요청:', licenseKey);
+      
+      // Background script를 통해 안전한 서버 검증
+      const response = await new Promise((resolve) => {
+        chrome.runtime.sendMessage({
+          action: 'checkLicense',
+          data: { licenseKey: licenseKey }
+        }, resolve);
+      });
+
+      if (response && response.success) {
+        console.log('라이센스 검증 성공:', response.license);
+        return true;
+      } else {
+        console.log('라이센스 검증 실패:', response?.error);
+        return false;
+      }
+
+    } catch (error) {
+      console.error('라이센스 검증 오류:', error);
+      return false;
+    }
   }
 
   unlockPremiumSkins() {

@@ -10,11 +10,19 @@
     "clean": "cd build && node scripts/clean.js"
   },
   "devDependencies": {
+    "archiver": "^5.3.1",
     "dotenv": "^16.0.3",
-    "fs-extra": "^11.1.1",
-    "archiver": "^5.3.1"
+    "fs-extra": "^11.1.1"
   },
-  "keywords": ["chrome-extension", "pixel-pet", "cat", "dog"],
+  "keywords": [
+    "chrome-extension",
+    "pixel-pet",
+    "cat",
+    "dog"
+  ],
   "author": "Your Name",
-  "license": "MIT"
-} 
+  "license": "MIT",
+  "dependencies": {
+    "supabase": "^2.31.4"
+  }
+}
