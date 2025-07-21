@@ -16,11 +16,9 @@
     }
   ],
   "permissions": [
-    "activeTab",
     "storage",
     "identity",
-    "identity.email",
-    "tabs"
+    "identity.email"
   ],
   "web_accessible_resources": [
     {
@@ -38,4 +36,4 @@
      "default_popup": "popup.html",
     "default_title": "픽셀 고양이"
   }
-} 
+}
