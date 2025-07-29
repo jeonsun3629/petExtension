@@ -320,7 +320,7 @@ class CatController {
       <div class="premium-content">
         <h2>🌟 프리미엄 스킨</h2>
         <p>이 스킨은 프리미엄 버전에서만 사용할 수 있습니다.</p>
-        <div class="premium-price">₩3,000</div>
+        <div class="premium-price">$2.99</div>
         <p>모든 프리미엄 스킨을 평생 사용하세요!</p>
         <div style="margin: 20px 0;">
           <button class="premium-button" id="paypalBtn">
@@ -456,26 +456,19 @@ class CatController {
         return;
       }
       
-      // 자동 라이선스 활성화 시도 (보안 모드)
-      if (typeof autoActivateLicenseFromSupabaseSecure === 'function') {
-        const success = await autoActivateLicenseFromSupabaseSecure();
+      // background.js의 자동 라이선스 확인 함수 호출
+      const response = await chrome.runtime.sendMessage({
+        action: 'checkAutoLicense'
+      });
+      
+      if (response && response.success) {
+        console.log('🎉 Supabase 자동 라이선스 활성화 성공 (보안 모드)!');
         
-        if (success) {
-          console.log('🎉 Supabase 자동 라이선스 활성화 성공 (보안 모드)!');
-          
-          // UI 업데이트
-          await this.checkPremiumStatus();
-          this.showAutoActivationMessage();
-          
-          // 라이선스 모니터링 시작 (1시간 간격)
-          if (typeof startLicenseMonitoringSecure === 'function') {
-            startLicenseMonitoringSecure(60);
-          }
-        } else {
-          console.log('ℹ️ Supabase에서 라이선스를 찾을 수 없음 (정상)');
-        }
+        // UI 업데이트
+        await this.checkPremiumStatus();
+        this.showAutoActivationMessage();
       } else {
-        console.warn('autoActivateLicenseFromSupabaseSecure 함수를 찾을 수 없습니다.');
+        console.log('ℹ️ Supabase에서 라이선스를 찾을 수 없음 (정상)');
       }
       
     } catch (error) {
@@ -488,21 +481,21 @@ class CatController {
     try {
       console.log('🔍 수동 Supabase 라이선스 확인 시작 (보안 모드)...');
       
-      if (typeof manualLicenseCheckSecure === 'function') {
-        const success = await manualLicenseCheckSecure();
+      // background.js의 수동 라이선스 확인 함수 호출
+      const response = await chrome.runtime.sendMessage({
+        action: 'manualLicenseCheck'
+      });
+      
+      if (response && response.success) {
+        // 프리미엄 모달 닫기
+        this.closePremiumModal();
         
-        if (success) {
-          // 프리미엄 모달 닫기
-          this.closePremiumModal();
-          
-          // UI 업데이트
-          await this.checkPremiumStatus();
-          
-          console.log('✅ 수동 라이선스 확인 성공!');
-        }
+        // UI 업데이트
+        await this.checkPremiumStatus();
+        
+        console.log('✅ 수동 라이선스 확인 성공!');
       } else {
-        console.warn('manualLicenseCheckSecure 함수를 찾을 수 없습니다.');
-        alert('라이선스 확인 기능을 사용할 수 없습니다.');
+        console.log('ℹ️ 수동 라이선스 확인 실패');
       }
       
     } catch (error) {

@@ -57,6 +57,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
       return true;
       
+    case 'checkAutoLicense':
+      handleCheckAutoLicense(request.data, sendResponse);
+      return true;
+      
+    case 'manualLicenseCheck':
+      handleManualLicenseCheck(request.data, sendResponse);
+      return true;
+      
     default:
       console.warn('Background: 알 수 없는 액션:', request.action);
       sendResponse({ success: false, error: 'Unknown action' });
@@ -449,6 +457,87 @@ setInterval(async () => {
     console.error('Background: 주기적 라이선스 재검증 오류:', error);
   }
 }, 60 * 60 * 1000); // 1시간마다 체크 (24시간 경과시에만 실제 검증)
+
+/**
+ * 자동 라이선스 확인 핸들러 (popup.js에서 호출)
+ */
+async function handleCheckAutoLicense(data, sendResponse) {
+  try {
+    console.log('Background: 자동 라이선스 확인 요청 수신');
+    
+    // 기존 자동 라이선스 확인 함수 호출
+    await checkAutoLicenseActivation();
+    
+    // 결과 확인
+    const result = await chrome.storage.local.get(['isPremium', 'pixelcat_premium_license']);
+    
+    if (result.isPremium && result.pixelcat_premium_license) {
+      sendResponse({ success: true, message: '자동 라이선스 확인 성공' });
+    } else {
+      sendResponse({ success: false, message: '라이선스를 찾을 수 없음' });
+    }
+    
+  } catch (error) {
+    console.error('Background: 자동 라이선스 확인 오류:', error);
+    sendResponse({ success: false, error: error.message });
+  }
+}
+
+/**
+ * 수동 라이선스 확인 핸들러 (popup.js에서 호출)
+ */
+async function handleManualLicenseCheck(data, sendResponse) {
+  try {
+    console.log('Background: 수동 라이선스 확인 요청 수신');
+    
+    // 저장된 이메일들로 라이선스 확인
+    const result = await chrome.storage.local.get(['userEmails', 'lastPaymentEmail']);
+    const savedEmails = result.userEmails || [];
+    if (result.lastPaymentEmail) {
+      savedEmails.push(result.lastPaymentEmail);
+    }
+    
+    const uniqueEmails = [...new Set(savedEmails)];
+    let foundLicense = false;
+    
+    for (const email of uniqueEmails) {
+      if (email && email.includes('@')) {
+        try {
+          const licenseResult = await new Promise((resolve) => {
+            handleCheckLicense({ userEmail: email }, resolve);
+          });
+          
+          if (licenseResult.success) {
+            console.log('Background: 수동 라이선스 발견');
+            
+            // 프리미엄 활성화
+            await new Promise((resolve) => {
+              handleActivatePremium({
+                licenseKey: licenseResult.license.licenseKey,
+                userEmail: email
+              }, resolve);
+            });
+            
+            foundLicense = true;
+            break;
+          }
+        } catch (emailError) {
+          console.warn('Background: 이메일별 라이선스 확인 실패:', email, emailError);
+        }
+      }
+    }
+    
+    if (foundLicense) {
+      sendResponse({ success: true, message: '수동 라이선스 확인 성공' });
+    } else {
+      sendResponse({ success: false, message: '라이선스를 찾을 수 없음' });
+    }
+    
+  } catch (error) {
+    console.error('Background: 수동 라이선스 확인 오류:', error);
+    sendResponse({ success: false, error: error.message });
+  }
+}
 
 // 확장 프로그램 시작 로그
 console.log(`Background: 백그라운드 스크립트 로드 완료 (${BUILD_ENVIRONMENT})`);
