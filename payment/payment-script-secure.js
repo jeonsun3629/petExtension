@@ -1,6 +1,29 @@
 // payment-script-secure.js - 보안 결제 페이지 스크립트 (API 키 없음)
 // Background Script를 통한 안전한 결제 처리
 
+// PayPal SDK 동적 로딩
+async function loadPayPalSDK(clientId) {
+    return new Promise((resolve, reject) => {
+        // 이미 로드된 경우
+        if (window.paypal) {
+            resolve(window.paypal);
+            return;
+        }
+        
+        // PayPal SDK 스크립트 동적 로딩
+        const script = document.createElement('script');
+        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+        script.onload = () => {
+            console.log('PayPal SDK 로드 완료');
+            resolve(window.paypal);
+        };
+        script.onerror = () => {
+            reject(new Error('PayPal SDK 로드 실패'));
+        };
+        document.head.appendChild(script);
+    });
+}
+
 // PayPal 결제 처리
 async function processPayPalPaymentSecure() {
     try {
@@ -12,6 +35,9 @@ async function processPayPalPaymentSecure() {
         if (!paypalConfig || !paypalConfig.clientId) {
             throw new Error('PayPal 설정을 가져올 수 없습니다.');
         }
+        
+        // PayPal SDK 로드
+        const paypal = await loadPayPalSDK(paypalConfig.clientId);
         
         // PayPal 버튼 컨테이너 생성
         const paymentSection = document.getElementById('paymentSection');
@@ -88,6 +114,41 @@ async function processPayPalPaymentSecure() {
     }
 }
 
+// 토스 SDK 동적 로딩
+async function loadTossSDK() {
+    return new Promise((resolve, reject) => {
+        // 이미 로드된 경우
+        if (window.TossPayments) {
+            resolve(window.TossPayments);
+            return;
+        }
+        
+        // 토스 SDK 스크립트 동적 로딩
+        const script = document.createElement('script');
+        script.src = 'https://js.tosspayments.com/v2';
+        script.async = true;
+        script.defer = true;
+        
+        script.onload = () => {
+            console.log('토스 SDK 로드 완료');
+            // 약간의 지연 후 확인 (SDK 초기화 시간 고려)
+            setTimeout(() => {
+                if (window.TossPayments) {
+                    resolve(window.TossPayments);
+                } else {
+                    reject(new Error('토스 SDK 초기화 실패'));
+                }
+            }, 100);
+        };
+        
+        script.onerror = () => {
+            reject(new Error('토스 SDK 로드 실패'));
+        };
+        
+        document.head.appendChild(script);
+    });
+}
+
 // 토스 결제 처리
 async function processTossPaymentSecure() {
     try {
@@ -99,6 +160,9 @@ async function processTossPaymentSecure() {
         if (!tossConfig || !tossConfig.clientKey) {
             throw new Error('토스 설정을 가져올 수 없습니다.');
         }
+        
+        // 토스 SDK 로드
+        const TossPayments = await loadTossSDK();
         
         // Chrome 로그인 이메일 확인 후 사용자 이메일 입력 받기
         let userEmail = await getChromeUserEmail();
@@ -128,7 +192,7 @@ async function processTossPaymentSecure() {
         
         // 결제 데이터 설정
         const paymentData = {
-            amount: 2990, // 원 단위 (2.99 USD ≈ 13,000 KRW, 여기서는 9,990원으로 설정)
+            amount: 2990, // 원 단위 (2.99 USD ≈ 2,990원)
             orderId: 'PIXELCAT_' + new Date().getTime(), // 고유 주문 ID
             orderName: 'Pixel Cat Extension Premium License',
             customerName: userEmail.split('@')[0],
@@ -136,6 +200,8 @@ async function processTossPaymentSecure() {
             successUrl: window.location.origin + window.location.pathname + '?success=toss',
             failUrl: window.location.origin + window.location.pathname + '?fail=toss'
         };
+        
+        console.log('토스 결제 데이터:', paymentData);
         
         // 결제창 호출
         const payment = tossPayments.requestPayment('카드', paymentData);

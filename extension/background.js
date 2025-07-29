@@ -12,7 +12,8 @@ const API_CONFIG = {
     baseUrl: 'https://api-m.sandbox.paypal.com'
   },
   toss: {
-    clientKey: 'test_ck_kYG57Eba3GRe6onMedYL8pWDOxmA'
+    clientKey: 'test_ck_kYG57Eba3GRe6onMedYL8pWDOxmA',
+    environment: 'test' // 테스트 환경
   }
 };
 

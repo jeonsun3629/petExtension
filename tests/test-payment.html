@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 시스템 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #155724;
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>결제 시스템 테스트</h1>
+    
+    <div class="test-section">
+        <h2>CSP 테스트</h2>
+        <button onclick="testCSP()">CSP 정책 테스트</button>
+        <div id="csp-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>PayPal SDK 테스트</h2>
+        <button onclick="testPayPalSDK()">PayPal SDK 로드 테스트</button>
+        <div id="paypal-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>토스 SDK 테스트</h2>
+        <button onclick="testTossSDK()">토스 SDK 로드 테스트</button>
+        <div id="toss-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Chrome Extension API 테스트</h2>
+        <button onclick="testChromeAPI()">Chrome API 테스트</button>
+        <div id="chrome-result"></div>
+    </div>
+
+    <script>
+        function showResult(elementId, message, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="${isSuccess ? 'success' : 'error'}">${message}</div>`;
+        }
+
+        function testCSP() {
+            try {
+                // 인라인 스크립트 실행 테스트
+                eval('console.log("CSP 테스트")');
+                showResult('csp-result', '✅ CSP 정책이 올바르게 설정되었습니다.');
+            } catch (error) {
+                showResult('csp-result', `❌ CSP 오류: ${error.message}`, false);
+            }
+        }
+
+        async function testPayPalSDK() {
+            try {
+                // PayPal SDK 동적 로딩 테스트
+                const script = document.createElement('script');
+                script.src = 'https://www.paypal.com/sdk/js?client-id=test';
+                script.onload = () => {
+                    showResult('paypal-result', '✅ PayPal SDK 로드 성공');
+                };
+                script.onerror = () => {
+                    showResult('paypal-result', '❌ PayPal SDK 로드 실패', false);
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                showResult('paypal-result', `❌ PayPal SDK 테스트 오류: ${error.message}`, false);
+            }
+        }
+
+        async function testTossSDK() {
+            try {
+                // 토스 SDK 동적 로딩 테스트
+                const script = document.createElement('script');
+                script.src = 'https://js.tosspayments.com/v2';
+                script.onload = () => {
+                    showResult('toss-result', '✅ 토스 SDK 로드 성공');
+                };
+                script.onerror = () => {
+                    showResult('toss-result', '❌ 토스 SDK 로드 실패', false);
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                showResult('toss-result', `❌ 토스 SDK 테스트 오류: ${error.message}`, false);
+            }
+        }
+
+        function testChromeAPI() {
+            try {
+                if (typeof chrome !== 'undefined' && chrome.runtime) {
+                    showResult('chrome-result', '✅ Chrome Extension API 사용 가능');
+                } else {
+                    showResult('chrome-result', '❌ Chrome Extension API를 사용할 수 없습니다.', false);
+                }
+            } catch (error) {
+                showResult('chrome-result', `❌ Chrome API 테스트 오류: ${error.message}`, false);
+            }
+        }
+    </script>
+</body>
+</html> 
