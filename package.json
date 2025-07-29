@@ -7,7 +7,10 @@
     "build:dev": "cd build && node build.js --dev",
     "build:prod": "cd build && node build.js --prod",
     "package": "npm run build:prod && cd build && node package.js",
-    "clean": "cd build && node scripts/clean.js"
+    "package:extension": "npm run build:prod && cd build && node package.js --extension-only",
+    "package:gh-pages": "npm run build:prod && cd build && node package.js --gh-pages-only",
+    "clean": "cd build && node scripts/clean.js",
+    "deploy:gh-pages": "npm run build:prod && echo '✅ Build completed. Push to GitHub to deploy to Pages.'"
   },
   "devDependencies": {
     "archiver": "^5.3.1",
