@@ -8,7 +8,7 @@ const API_CONFIG = {
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTkxNTgsImV4cCI6MjA2ODA3NTE1OH0.G2k1yy6bbnpyi2F6U7cPC1Y6LtBn2nCvfuIUHPXxb9s'
   },
   paypal: {
-    clientId: 'AQqclewaDKAMaraZmd8ZQui1tkw1e9xSwq_D3pC66SiMugo1uoath2Y65EHWVOLfvCCLmf9Wztr0uRQk',
+    clientId: 'Abs4OksUpVjIL04t4lmPxErQkzzlK-5u5H95Cy0AC5pLa5ipgH8cnFcemI-DRufjjD51dgjI88A1_E6O',
     baseUrl: 'https://api-m.sandbox.paypal.com'
   },
   toss: {

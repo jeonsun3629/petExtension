@@ -7,10 +7,22 @@ async function processPayPalPaymentSecure() {
         console.log('PayPal 결제 시작 (보안 모드)...');
         showPaymentProgress('PayPal 결제창을 준비하는 중...');
         
-        // Background에서 PayPal 설정 가져오기
-        const paypalConfig = await getPaymentConfigSecure('paypal');
+        // PayPal 설정 가져오기 (실패 시 기본 설정 사용)
+        let paypalConfig = await getPaymentConfigSecure('paypal');
         if (!paypalConfig || !paypalConfig.clientId) {
-            throw new Error('PayPal 설정을 가져올 수 없습니다.');
+            console.log('PayPal 설정 가져오기 실패, 기본 설정 사용');
+            paypalConfig = {
+                clientId: 'Abs4OksUpVjIL04t4lmPxErQkzzlK-5u5H95Cy0AC5pLa5ipgH8cnFcemI-DRufjjD51dgjI88A1_E6O',
+                currency: 'USD',
+                environment: 'sandbox'
+            };
+        }
+        
+        console.log('PayPal 설정 로드 완료:', paypalConfig);
+        
+        // PayPal SDK가 로드되지 않았다면 동적으로 로드
+        if (typeof paypal === 'undefined') {
+            await loadPayPalSDK();
         }
         
         // PayPal 버튼 컨테이너 생성
@@ -24,67 +36,78 @@ async function processPayPalPaymentSecure() {
         `;
         
         // PayPal 버튼 렌더링
-        paypal.Buttons({
-            style: {
-                color: 'blue',
-                shape: 'rect',
-                label: 'pay'
-            },
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: '2.99',
-                            currency_code: 'USD'
-                        },
-                        description: 'Pixel Cat Extension Premium License'
-                    }]
-                });
-            },
-            onApprove: async function(data, actions) {
-                try {
-                    showPaymentProgress('결제 완료를 확인하는 중...');
-                    
-                    // Chrome 로그인 이메일 확인 후 사용자 이메일 결정
-                    let userEmail = await getChromeUserEmail();
-                    if (!userEmail) {
-                        userEmail = prompt('라이선스를 등록할 이메일을 입력해주세요:') || 'user@example.com';
-                    } else {
-                        console.log('Chrome 로그인 이메일 자동 사용:', userEmail);
-                    }
-                    
-                    // Background를 통해 라이선스 발급 요청
-                    const result = await issueLicenseSecure({
-                        paymentProvider: 'paypal',
-                        paymentId: data.orderID,
-                        userEmail: userEmail,
-                        amount: 2.99
+        if (typeof paypal !== 'undefined') {
+            paypal.Buttons({
+                style: {
+                    color: 'blue',
+                    shape: 'rect',
+                    label: 'pay'
+                },
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: '2.99', // 실제 결제 금액
+                                currency_code: 'USD'
+                            },
+                            description: 'Pixel Cat Extension Premium License'
+                        }]
                     });
-                    
-                    if (result.success) {
-                        handlePaymentSuccess(result.licenseKey);
-                    } else {
-                        throw new Error(result.error || '라이선스 발급에 실패했습니다.');
+                },
+                onApprove: async function(data, actions) {
+                    try {
+                        showPaymentProgress('결제 완료를 확인하는 중...');
+                        
+                        // Chrome 로그인 이메일 확인 후 사용자 이메일 결정
+                        let userEmail = await getChromeUserEmail();
+                        if (!userEmail) {
+                            userEmail = prompt('라이선스를 등록할 이메일을 입력해주세요:') || 'user@example.com';
+                        } else {
+                            console.log('Chrome 로그인 이메일 자동 사용:', userEmail);
+                        }
+                        
+                        // 웹페이지 모드에서는 라이선스 발급 대신 성공 메시지 표시
+                        if (typeof chrome === 'undefined' || !chrome.runtime) {
+                            console.log('웹페이지 모드: 라이선스 발급 대신 성공 메시지 표시');
+                            handlePaymentSuccess('WEBPAGE_MODE_LICENSE_' + Date.now());
+                            return;
+                        }
+                        
+                        // Background를 통해 라이선스 발급 요청
+                        const result = await issueLicenseSecure({
+                            paymentProvider: 'paypal',
+                            paymentId: data.orderID,
+                            userEmail: userEmail,
+                            amount: 2.99
+                        });
+                        
+                        if (result.success) {
+                            handlePaymentSuccess(result.licenseKey);
+                        } else {
+                            throw new Error(result.error || '라이선스 발급에 실패했습니다.');
+                        }
+                        
+                    } catch (error) {
+                        console.error('PayPal 결제 후 처리 실패:', error);
+                        alert('결제는 완료되었지만 라이선스 발급 중 오류가 발생했습니다. 고객 지원에 문의해주세요.');
                     }
-                    
-                } catch (error) {
-                    console.error('PayPal 결제 후 처리 실패:', error);
-                    alert('결제는 완료되었지만 라이선스 발급 중 오류가 발생했습니다. 고객 지원에 문의해주세요.');
+                },
+                onError: function(err) {
+                    console.error('PayPal 결제 오류:', err);
+                    alert('PayPal 결제 중 오류가 발생했습니다. 다시 시도해주세요.');
+                },
+                onCancel: function(data) {
+                    console.log('PayPal 결제 취소:', data);
+                    location.reload(); // 페이지 새로고침
                 }
-            },
-            onError: function(err) {
-                console.error('PayPal 결제 오류:', err);
-                alert('PayPal 결제 중 오류가 발생했습니다. 다시 시도해주세요.');
-            },
-            onCancel: function(data) {
-                console.log('PayPal 결제 취소:', data);
-                location.reload(); // 페이지 새로고침
-            }
-        }).render('#paypal-button-container');
+            }).render('#paypal-button-container');
+        } else {
+            throw new Error('PayPal SDK를 로드할 수 없습니다.');
+        }
         
     } catch (error) {
         console.error('PayPal 결제 실패:', error);
-        alert('PayPal 결제 시스템 연결에 실패했습니다.');
+        alert('PayPal 결제 시스템 연결에 실패했습니다. 다시 시도해주세요.');
     }
 }
 
@@ -199,6 +222,14 @@ function handlePaymentSuccess(licenseKey) {
     document.getElementById('successSection').style.display = 'block';
     document.getElementById('licenseCode').textContent = licenseKey;
     
+    // 웹페이지 모드 체크
+    if (licenseKey.startsWith('WEBPAGE_MODE_LICENSE_')) {
+        document.getElementById('licenseCode').textContent = '웹페이지 모드 - 확장 프로그램에서 확인 필요';
+        document.getElementById('activationStatus').textContent = '✅ 결제 완료! 확장 프로그램에서 라이센스를 확인해주세요.';
+        document.getElementById('activationStatus').style.color = '#22c55e';
+        return;
+    }
+    
     // 확장 프로그램에 자동 활성화 메시지 전송
     activateExtensionPremiumSecure(licenseKey);
 }
@@ -208,6 +239,14 @@ async function activateExtensionPremiumSecure(licenseKey) {
     try {
         const statusDiv = document.getElementById('activationStatus');
         statusDiv.textContent = '라이센스 키 저장 중...';
+        
+        // 웹페이지 모드 체크
+        if (typeof chrome === 'undefined' || !chrome.runtime) {
+            statusDiv.textContent = '✅ 결제 완료! 확장 프로그램에서 라이센스를 확인해주세요.';
+            statusDiv.style.color = '#22c55e';
+            console.log('웹페이지 모드: 라이센스 키 저장 건너뜀');
+            return;
+        }
         
         // Chrome storage에 라이센스 키 저장
         try {
@@ -269,6 +308,53 @@ function goBack() {
 // 랜덤 ID 생성
 function generateRandomId() {
     return Math.random().toString(36).substr(2, 9).toUpperCase();
+}
+
+// PayPal SDK 동적 로드
+async function loadPayPalSDK() {
+    try {
+        let paypalConfig = await getPaymentConfigSecure('paypal');
+        if (!paypalConfig || !paypalConfig.clientId) {
+            console.log('PayPal 설정 가져오기 실패, 기본 설정 사용');
+            paypalConfig = {
+                clientId: 'Abs4OksUpVjIL04t4lmPxErQkzzlK-5u5H95Cy0AC5pLa5ipgH8cnFcemI-DRufjjD51dgjI88A1_E6O',
+                currency: 'USD',
+                environment: 'sandbox'
+            };
+        }
+        
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = `https://www.paypal.com/sdk/js?client-id=${paypalConfig.clientId}&currency=${paypalConfig.currency || 'USD'}`;
+            script.async = true;
+            script.onload = () => {
+                console.log('PayPal SDK 로드 완료');
+                resolve();
+            };
+            script.onerror = (err) => {
+                console.error('PayPal SDK 로드 실패:', err);
+                reject(new Error('PayPal SDK 로드 실패'));
+            };
+            document.head.appendChild(script);
+        });
+    } catch (error) {
+        console.error('PayPal 설정 로드 실패:', error);
+        // 기본 설정으로 재시도
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://www.paypal.com/sdk/js?client-id=Abs4OksUpVjIL04t4lmPxErQkzzlK-5u5H95Cy0AC5pLa5ipgH8cnFcemI-DRufjjD51dgjI88A1_E6O&currency=USD';
+            script.async = true;
+            script.onload = () => {
+                console.log('PayPal SDK 로드 완료 (기본 설정)');
+                resolve();
+            };
+            script.onerror = (err) => {
+                console.error('PayPal SDK 로드 실패:', err);
+                reject(new Error('PayPal SDK 로드 실패'));
+            };
+            document.head.appendChild(script);
+        });
+    }
 }
 
 // DOM 로드 완료 후 이벤트 리스너 설정

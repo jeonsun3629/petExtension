@@ -197,6 +197,9 @@
         </div>
         
         <div id="paymentSection" class="payment-buttons">
+            <!-- PayPal 버튼이 여기에 렌더링됩니다 -->
+            <div id="paypal-button-container"></div>
+            
             <button id="paypalBtn" class="payment-btn paypal-btn">
                 💳 PayPal로 결제하기
             </button>
@@ -279,8 +282,7 @@
     <!-- CSP 호환 스크립트 -->
     <script src="user-info.js"></script>
     <script src="secure-license-manager.js"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id=AQqclewa..."></script>
-    <script src="https://js.tosspayments.com/v2"></script>
     <script src="payment-script-secure.js"></script>
+    <script src="https://js.tosspayments.com/v2"></script>
 </body>
 </html> 
