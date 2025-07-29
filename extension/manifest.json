@@ -22,7 +22,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["assets/skins/yellowCat.png", "assets/skins/greyCat.png", "assets/skins/calicoCat.png", "assets/skins/yellowCat_icon.png", "assets/skins/greyCat_icon.png", "assets/skins/calicoCat_icon.png", "assets/skins/greyDog.PNG", "assets/skins/blackDog.PNG", "assets/skins/yellowDog.PNG", "assets/skins/greyDog_icon.PNG", "assets/skins/blackDog_icon.PNG", "assets/skins/yellowDog_icon.PNG", "payment/payment.html", "payment/user-info.js", "payment/secure-license-manager.js", "payment/payment-script-secure.js", "payment/i18n-init.js"],
+      "resources": ["assets/skins/yellowCat.png", "assets/skins/greyCat.png", "assets/skins/calicoCat.png", "assets/skins/yellowCat_icon.png", "assets/skins/greyCat_icon.png", "assets/skins/calicoCat_icon.png", "assets/skins/greyDog.PNG", "assets/skins/blackDog.PNG", "assets/skins/yellowDog.PNG", "assets/skins/greyDog_icon.PNG", "assets/skins/blackDog_icon.PNG", "assets/skins/yellowDog_icon.PNG", "payment/payment.html", "payment/user-info.js", "payment/secure-license-manager.js", "payment/payment-script-secure.js"],
       "matches": ["<all_urls>"]
     }
   ],
@@ -30,7 +30,7 @@
     "matches": ["https://jeonsun3629.github.io/petExtension/*", "https://localhost:3000/*"]
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self' 'wasm-unsafe-eval' https://www.paypal.com https://js.tosspayments.com; object-src 'self';"
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
   },
   "action": {
      "default_popup": "popup.html",
