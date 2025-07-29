@@ -18,7 +18,7 @@ async function processPayPalPaymentSecure() {
         paymentSection.innerHTML = `
             <div style="padding: 40px; text-align: center;">
                 <h3>PayPal로 결제하기</h3>
-                <p style="margin: 20px 0; font-size: 18px; font-weight: bold;">프리미엄 라이선스 - $9.99</p>
+                <p style="margin: 20px 0; font-size: 18px; font-weight: bold;">프리미엄 라이선스 - $2.99</p>
                 <div id="paypal-button-container" style="max-width: 400px; margin: 0 auto;"></div>
             </div>
         `;
@@ -34,7 +34,7 @@ async function processPayPalPaymentSecure() {
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: '9.99',
+                            value: '2.99',
                             currency_code: 'USD'
                         },
                         description: 'Pixel Cat Extension Premium License'
@@ -58,7 +58,7 @@ async function processPayPalPaymentSecure() {
                         paymentProvider: 'paypal',
                         paymentId: data.orderID,
                         userEmail: userEmail,
-                        amount: 9.99
+                        amount: 2.99
                     });
                     
                     if (result.success) {
@@ -128,7 +128,7 @@ async function processTossPaymentSecure() {
         
         // 결제 데이터 설정
         const paymentData = {
-            amount: 9990, // 원 단위 (9.99 USD ≈ 13,000 KRW, 여기서는 9,990원으로 설정)
+            amount: 2990, // 원 단위 (2.99 USD ≈ 13,000 KRW, 여기서는 9,990원으로 설정)
             orderId: 'PIXELCAT_' + new Date().getTime(), // 고유 주문 ID
             orderName: 'Pixel Cat Extension Premium License',
             customerName: userEmail.split('@')[0],
@@ -149,7 +149,7 @@ async function processTossPaymentSecure() {
                     paymentProvider: 'toss',
                     paymentId: result.paymentKey,
                     userEmail: userEmail,
-                    amount: 9.99
+                    amount: 2.99
                 });
                 
                 if (response.success) {

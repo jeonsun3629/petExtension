@@ -7,7 +7,9 @@
 ```
 payment/
 ├── payment-script-secure.js  # 결제 처리 스크립트
-├── payment-example.html      # 결제 시뮬레이션 페이지
+├── payment.html              # 실제 결제 페이지
+├── user-info.js              # 사용자 정보 관리
+├── secure-license-manager.js # 라이선스 관리
 └── README.md                 # 이 파일
 ```
 
@@ -18,23 +20,25 @@ payment/
 - 결제 완료 후 라이선스 키 생성
 - 크롬 익스텐션과의 메시지 통신
 
-### `payment-example.html`
-- 결제 시뮬레이션 데모 페이지
-- PayPal 및 Toss 결제 테스트 UI
-- 실제 서비스에서는 별도 웹사이트로 구현
+### `payment.html`
+- 실제 결제 페이지
+- PayPal 및 Toss 결제 처리
+- 확장 프로그램에서 직접 호출
+
+
 
 ## 💰 지원 결제 방식
 
 ### PayPal
 - **환경**: Sandbox (테스트) / Live (운영)
 - **통화**: USD
-- **가격**: $9.99
+- **가격**: $2.99
 - **특징**: 국제 결제 지원
 
 ### Toss Payments
 - **환경**: Test (테스트) / Live (운영)
 - **통화**: KRW
-- **가격**: ₩13,000
+- **가격**: ₩3,000
 - **특징**: 국내 결제 특화
 
 ## 🔄 결제 플로우
@@ -43,7 +47,7 @@ payment/
 ```javascript
 // 크롬 익스텐션에서 결제 페이지 열기
 chrome.tabs.create({
-  url: 'https://your-payment-site.com/payment-example.html'
+  url: 'https://jeonsun3629.github.io/petExtension/payment.html'
 });
 ```
 
@@ -54,7 +58,7 @@ paypal.Buttons({
   createOrder: function(data, actions) {
     return actions.order.create({
       purchase_units: [{
-        amount: { value: '9.99', currency_code: 'USD' }
+        amount: { value: '2.99', currency_code: 'USD' }
       }]
     });
   },
@@ -119,7 +123,7 @@ TOSS_CLIENT_KEY=live_ck_your-live-key
 
 ## 🚀 배포 방법
 
-### 1. 정적 웹사이트 배포
+### 1. 확장 프로그램 내장
 ```bash
 # Netlify, Vercel 등에 배포
 # 환경변수 설정 필요
@@ -175,12 +179,12 @@ TOSS_CLIENT_KEY=test_ck_***
 
 ### 새 결제 방식 추가
 1. `payment-script-secure.js`에 새 결제 로직 추가
-2. `payment-example.html`에 UI 컴포넌트 추가
+2. `payment.html`에 UI 컴포넌트 추가
 3. 백엔드 검증 로직 업데이트
 
 ### 가격 정책 변경
 1. `payment-script-secure.js`에서 가격 상수 변경
-2. UI 텍스트 업데이트
+2. `payment.html`에서 UI 텍스트 업데이트
 3. 백엔드 검증 로직 동기화
 
 ### 통화 지원 추가
@@ -201,14 +205,14 @@ TOSS_CLIENT_KEY=test_ck_***
 // 결제 이벤트 추적
 gtag('event', 'purchase', {
   transaction_id: paymentData.id,
-  value: 9.99,
+  value: 2.99,
   currency: 'USD',
   items: [{
     item_id: 'premium_skins',
     item_name: 'Premium Pet Skins',
     category: 'Digital Content',
     quantity: 1,
-    price: 9.99
+    price: 2.99
   }]
 });
 ```

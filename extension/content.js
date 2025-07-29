@@ -23,19 +23,19 @@ const skinConfigs = {
   // 프리미엄 스킨들
   'greyDog': {
     file: 'assets/skins/greyDog.PNG',
-    cols: 4, rows: 8,
+    cols: 4, rows: 9,
     animations: ['walk-front', 'walk-right', 'walk-back', 'walk-left', 'sit', 'sit-groom', 'lie', 'sleep'],
     fallbacks: {}
   },
   'blackDog': {
     file: 'assets/skins/blackDog.PNG',
-    cols: 4, rows: 8,
+    cols: 4, rows: 9,
     animations: ['walk-front', 'walk-right', 'walk-back', 'walk-left', 'sit', 'sit-groom', 'lie', 'sleep'],
     fallbacks: {}
   },
   'yellowDog': {
     file: 'assets/skins/yellowDog.PNG',
-    cols: 4, rows: 8,
+    cols: 4, rows: 9,
     animations: ['walk-front', 'walk-right', 'walk-back', 'walk-left', 'sit', 'sit-groom', 'lie', 'sleep'],
     fallbacks: {}
   }

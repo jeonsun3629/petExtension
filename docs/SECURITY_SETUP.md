@@ -18,17 +18,7 @@ cp env.example .env.production
 
 ### 2. 개발 환경 설정 (.env.development)
 
-```bash
-# .env.development 파일 내용
-NODE_ENV=development
-SUPABASE_URL=https://qwbhuusjpnpfwwrzpnfx.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTkxNTgsImV4cCI6MjA2ODA3NTE1OH0.G2k1yy6bbnpyi2F6U7cPC1Y6LtBn2nCvfuIUHPXxb9s
-PAYPAL_CLIENT_ID=AQqclewaDKAMaraZmd8ZQui1tkw1e9xSwq_D3pC66SiMugo1uoath2Y65EHWVOLfvCCLmf9Wztr0uRQk
-PAYPAL_BASE_URL=https://api-m.sandbox.paypal.com
-TOSS_CLIENT_KEY=test_ck_kYG57Eba3GRe6onMedYL8pWDOxmA
-EXTENSION_ID=development-extension-id
-PAYMENT_DOMAIN=https://localhost:3000
-```
+~~
 
 ### 3. 빌드 및 테스트
 
@@ -85,9 +75,7 @@ ls -la packages/
 
 ```bash
 # 빌드된 파일에서 하드코딩된 키 검색
-grep -r "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" dist/
-grep -r "AQqclewaDKAMaraZmd8ZQui1tkw1e9xSwq_D3pC66SiM" dist/
-grep -r "test_ck_kYG57Eba3GRe6onMedYL8pWDOxmA" dist/
+~
 
 # 결과가 없으면 성공 (환경변수로 주입됨)
 ```

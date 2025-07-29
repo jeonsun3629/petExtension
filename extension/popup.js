@@ -363,7 +363,8 @@ class CatController {
   }
 
   openPaymentPage(paymentMethod) {
-    const paymentUrl = chrome.runtime.getURL('01.payment-example.html') + `?method=${paymentMethod}`;
+    // GitHub Pages의 payment 페이지로 연결
+    const paymentUrl = `https://jeonsun3629.github.io/petExtension/payment.html`;
     chrome.tabs.create({ url: paymentUrl });
     this.closePremiumModal();
   }
