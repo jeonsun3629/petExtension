@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">픽셀 고양이 - 프리미엄 스킨 구매</title>
+    <title>픽셀 고양이 - 프리미엄 스킨 구매</title>
     <style>
         * {
             margin: 0;
@@ -231,58 +231,196 @@
         </div>
     </div>
 
-    <!-- i18n 초기화 스크립트 -->
+    <!-- GitHub Pages용 스크립트 -->
     <script>
-        // Chrome Extension 환경에서 i18n 메시지로 텍스트 설정
-        function initializeI18n() {
-            // chrome.i18n API가 있는지 확인 (Chrome Extension 환경)
-            if (typeof chrome !== 'undefined' && chrome.i18n) {
-                // 페이지 제목
-                document.title = chrome.i18n.getMessage('premiumSkinPurchase') + ' - ' + chrome.i18n.getMessage('pixelCatExtension');
-                document.getElementById('pageTitle').textContent = document.title;
+        // PayPal 설정
+        const PAYPAL_CONFIG = {
+            clientId: 'Abs4OksUpVjIL04t4lmPxErQkzzlK-5u5H95Cy0AC5pLa5ipgH8cnFcemI-DRufjjD51dgjI88A1_E6O',
+            currency: 'USD',
+            environment: 'sandbox'
+        };
+
+        // PayPal SDK 로드
+        async function loadPayPalSDK() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CONFIG.clientId}&currency=${PAYPAL_CONFIG.currency}`;
+                script.async = true;
+                script.onload = () => {
+                    console.log('PayPal SDK 로드 완료');
+                    resolve();
+                };
+                script.onerror = (err) => {
+                    console.error('PayPal SDK 로드 실패:', err);
+                    reject(new Error('PayPal SDK 로드 실패'));
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        // PayPal 결제 처리
+        async function processPayPalPayment() {
+            try {
+                console.log('PayPal 결제 시작...');
+                showPaymentProgress('PayPal 결제창을 준비하는 중...');
                 
-                // 메인 타이틀
-                document.getElementById('mainTitle').innerHTML = '🌟 ' + chrome.i18n.getMessage('premiumSkinPurchase');
+                // PayPal SDK 로드
+                if (typeof paypal === 'undefined') {
+                    await loadPayPalSDK();
+                }
                 
-                // 서브타이틀
-                document.getElementById('subtitle').textContent = chrome.i18n.getMessage('pixelCatExtension');
+                // PayPal 버튼 컨테이너 생성
+                const paymentSection = document.getElementById('paymentSection');
+                paymentSection.innerHTML = `
+                    <div style="padding: 40px; text-align: center;">
+                        <h3>PayPal로 결제하기</h3>
+                        <p style="margin: 20px 0; font-size: 18px; font-weight: bold;">프리미엄 라이선스 - $2.99</p>
+                        <div id="paypal-button-container" style="max-width: 400px; margin: 0 auto;"></div>
+                    </div>
+                `;
                 
-                // 가격
-                document.getElementById('price').textContent = chrome.i18n.getMessage('priceKRW');
+                // PayPal 버튼 렌더링
+                if (typeof paypal !== 'undefined') {
+                    paypal.Buttons({
+                        style: {
+                            color: 'blue',
+                            shape: 'rect',
+                            label: 'pay'
+                        },
+                        createOrder: function(data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: '2.99',
+                                        currency_code: 'USD'
+                                    },
+                                    description: 'Pixel Cat Extension Premium License'
+                                }]
+                            });
+                        },
+                        onApprove: async function(data, actions) {
+                            try {
+                                showPaymentProgress('결제 완료를 확인하는 중...');
+                                
+                                // 결제 성공 처리
+                                handlePaymentSuccess('PAYPAL_LICENSE_' + Date.now());
+                                
+                            } catch (error) {
+                                console.error('PayPal 결제 후 처리 실패:', error);
+                                alert('결제는 완료되었지만 라이선스 발급 중 오류가 발생했습니다.');
+                            }
+                        },
+                        onError: function(err) {
+                            console.error('PayPal 결제 오류:', err);
+                            alert('PayPal 결제 중 오류가 발생했습니다. 다시 시도해주세요.');
+                        },
+                        onCancel: function(data) {
+                            console.log('PayPal 결제 취소:', data);
+                            location.reload();
+                        }
+                    }).render('#paypal-button-container');
+                } else {
+                    throw new Error('PayPal SDK를 로드할 수 없습니다.');
+                }
                 
-                // 기능 목록
-                document.getElementById('featuresTitle').textContent = chrome.i18n.getMessage('includedPremiumSkins');
-                document.getElementById('greydogSkin').textContent = chrome.i18n.getMessage('greydogSkin');
-                document.getElementById('blackdogSkin').textContent = chrome.i18n.getMessage('blackdogSkin');
-                document.getElementById('yellowdogSkin').textContent = chrome.i18n.getMessage('yellowdogSkin');
-                document.getElementById('futureSkinsIncluded').textContent = chrome.i18n.getMessage('futureSkinsIncluded');
-                document.getElementById('lifetimeAccess').textContent = chrome.i18n.getMessage('lifetimeAccess');
-                
-                // 결제 버튼
-                document.getElementById('paypalBtn').textContent = chrome.i18n.getMessage('payWithPaypal');
-                document.getElementById('tossBtn').textContent = chrome.i18n.getMessage('payWithToss');
-                document.getElementById('backBtn').textContent = chrome.i18n.getMessage('goBack');
-                
-                // 성공 메시지
-                document.getElementById('paymentCompletedTitle').textContent = chrome.i18n.getMessage('paymentCompleted');
-                document.getElementById('purchaseCompletedMsg').textContent = chrome.i18n.getMessage('premiumSkinPurchaseCompleted');
-                document.getElementById('autoActivationTitle').textContent = chrome.i18n.getMessage('autoActivationInProgress');
-                document.getElementById('autoActivationMsg').textContent = chrome.i18n.getMessage('autoActivatingExtension');
-                document.getElementById('activationStatus').textContent = chrome.i18n.getMessage('connectionAttempt');
-                document.getElementById('licenseKeyLabel').textContent = chrome.i18n.getMessage('licenseKey');
-                document.getElementById('copyBtn').textContent = chrome.i18n.getMessage('copyToClipboard');
-                document.getElementById('failureNote').textContent = chrome.i18n.getMessage('autoActivationFailureNote');
+            } catch (error) {
+                console.error('PayPal 결제 실패:', error);
+                alert('PayPal 결제 시스템 연결에 실패했습니다. 다시 시도해주세요.');
             }
         }
 
-        // DOM이 로드되면 i18n 초기화 실행
-        document.addEventListener('DOMContentLoaded', initializeI18n);
-    </script>
+        // 토스 결제 처리
+        function processTossPayment() {
+            alert('토스 결제는 준비 중입니다.');
+        }
 
-    <!-- CSP 호환 스크립트 -->
-    <script src="user-info.js"></script>
-    <script src="secure-license-manager.js"></script>
-    <script src="payment-script-secure.js"></script>
-    <script src="https://js.tosspayments.com/v2"></script>
+        // 결제 진행 상태 표시
+        function showPaymentProgress(message) {
+            const statusDiv = document.getElementById('activationStatus');
+            if (statusDiv) {
+                statusDiv.textContent = message;
+                statusDiv.style.color = '#ffd700';
+            }
+        }
+
+        // 결제 성공 처리
+        function handlePaymentSuccess(licenseKey) {
+            const successSection = document.getElementById('successSection');
+            const paymentSection = document.getElementById('paymentSection');
+            
+            if (successSection && paymentSection) {
+                paymentSection.style.display = 'none';
+                successSection.style.display = 'block';
+                
+                const licenseCode = document.getElementById('licenseCode');
+                if (licenseCode) {
+                    licenseCode.textContent = licenseKey;
+                }
+                
+                const statusDiv = document.getElementById('activationStatus');
+                if (statusDiv) {
+                    statusDiv.textContent = '✅ 결제 완료! 확장 프로그램에서 라이센스를 확인해주세요.';
+                    statusDiv.style.color = '#22c55e';
+                }
+                
+                console.log('라이센스 키 생성 완료:', licenseKey);
+            }
+        }
+
+        // 라이센스 키 복사
+        function copyLicenseKey() {
+            const licenseCode = document.getElementById('licenseCode');
+            if (licenseCode) {
+                const text = licenseCode.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('라이센스 키가 클립보드에 복사되었습니다!');
+                }).catch(err => {
+                    console.error('복사 실패:', err);
+                    alert('복사에 실패했습니다. 수동으로 복사해주세요.');
+                });
+            }
+        }
+
+        // 뒤로가기
+        function goBack() {
+            window.close();
+        }
+
+        // DOM 로드 완료 후 이벤트 리스너 설정
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('GitHub Pages 결제 페이지 로드됨');
+            
+            const paypalBtn = document.querySelector('.paypal-btn');
+            const tossBtn = document.querySelector('.toss-btn');
+            const backBtn = document.querySelector('.back-btn');
+            const copyBtn = document.querySelector('.copy-btn');
+            
+            if (paypalBtn) {
+                paypalBtn.addEventListener('click', processPayPalPayment);
+            }
+            
+            if (tossBtn) {
+                tossBtn.addEventListener('click', processTossPayment);
+            }
+            
+            if (backBtn) {
+                backBtn.addEventListener('click', goBack);
+            }
+            
+            if (copyBtn) {
+                copyBtn.addEventListener('click', copyLicenseKey);
+            }
+            
+            // URL 파라미터에서 결제 방법 확인
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentMethod = urlParams.get('method');
+            
+            if (paymentMethod === 'paypal') {
+                processPayPalPayment();
+            } else if (paymentMethod === 'toss') {
+                processTossPayment();
+            }
+        });
+    </script>
 </body>
 </html> 
