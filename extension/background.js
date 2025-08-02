@@ -174,30 +174,19 @@ async function handleIssueLicense(data, sendResponse) {
       return;
     }
 
-    const response = await fetch(`${API_CONFIG.supabase.url}/functions/v1/issue-license`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': API_CONFIG.supabase.anonKey,
-        'Authorization': `Bearer ${API_CONFIG.supabase.anonKey}`
-      },
-      body: JSON.stringify({
-        paymentProvider,
-        paymentId,
-        userEmail,
-        amount: amount || 9.99,
-        environment: BUILD_ENVIRONMENT,
-        clientInfo: {
-          buildTime: BUILD_TIME,
-          version: chrome.runtime.getManifest().version
-        }
-      })
-    });
-
-    const result = await response.json();
+    // 재시도 로직으로 라이선스 발급 처리
+    const result = await processLicenseIssuanceWithRetry(data);
     
-    if (response.ok && result.success) {
+    if (result.success) {
       console.log('Background: 라이선스 발급 성공');
+      
+      // 추가: Supabase에 상세한 결제 정보 저장
+      try {
+        await savePaymentDetailsToSupabase(data, result.licenseKey);
+      } catch (saveError) {
+        console.warn('Background: 결제 정보 저장 실패 (라이선스는 발급됨):', saveError);
+      }
+      
       sendResponse({
         success: true,
         licenseKey: result.licenseKey,
@@ -218,6 +207,65 @@ async function handleIssueLicense(data, sendResponse) {
       error.message;
     sendResponse({ success: false, error: errorMessage });
   }
+}
+
+/**
+ * 재시도 로직을 포함한 라이선스 발급 처리
+ */
+async function processLicenseIssuanceWithRetry(data) {
+  const maxRetries = 3;
+  let lastError = null;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Background: 라이선스 발급 시도 ${attempt}/${maxRetries}`);
+      
+      const response = await fetch(`${API_CONFIG.supabase.url}/functions/v1/issue-license`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': API_CONFIG.supabase.anonKey,
+          'Authorization': `Bearer ${API_CONFIG.supabase.anonKey}`
+        },
+        body: JSON.stringify({
+          paymentProvider: data.paymentProvider,
+          paymentId: data.paymentId,
+          userEmail: data.userEmail,
+          amount: data.amount || 9.99,
+          environment: BUILD_ENVIRONMENT,
+          clientInfo: {
+            buildTime: BUILD_TIME,
+            version: chrome.runtime.getManifest().version
+          }
+        })
+      });
+
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        return result;
+      } else {
+        throw new Error(result.error || '라이선스 발급에 실패했습니다.');
+      }
+      
+    } catch (error) {
+      lastError = error;
+      console.error(`Background: 라이선스 발급 시도 ${attempt} 실패:`, error);
+      
+      if (attempt < maxRetries) {
+        // 재시도 전 잠시 대기 (지수 백오프)
+        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  
+  // 모든 재시도 실패
+  console.error('Background: 모든 라이선스 발급 시도 실패:', lastError);
+  return {
+    success: false,
+    error: lastError?.message || '라이선스 발급에 실패했습니다.'
+  };
 }
 
 /**
@@ -334,7 +382,59 @@ async function handleActivatePremium(data, sendResponse) {
   }
 }
 
-// 확장 프로그램 생명주기 관리
+/**
+ * Supabase에 상세한 결제 정보 저장
+ */
+async function savePaymentDetailsToSupabase(paymentData, licenseKey) {
+  try {
+    const paymentRecord = {
+      payment_provider: paymentData.paymentProvider,
+      payment_id: paymentData.paymentId,
+      amount: parseFloat(paymentData.amount || 9.99),
+      currency: 'USD',
+      status: 'completed',
+      payment_data: {
+        order_id: paymentData.paymentId,
+        payer_id: paymentData.userEmail, // PayPal payer_id 대신 이메일 사용
+        payer_email: paymentData.userEmail,
+        payer_name: paymentData.userEmail.split('@')[0], // 이메일에서 이름 추출
+        payment_time: new Date().toISOString(),
+        product_name: 'Pixel Pet Extension Premium License',
+        product_description: '프리미엄 스킨 라이선스',
+        license_key: licenseKey
+      },
+      verified_at: new Date().toISOString(),
+      created_at: new Date().toISOString()
+    };
+
+    const response = await fetch(`${API_CONFIG.supabase.url}/rest/v1/payments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': API_CONFIG.supabase.anonKey,
+        'Authorization': `Bearer ${API_CONFIG.supabase.anonKey}`
+      },
+      body: JSON.stringify([paymentRecord])
+    });
+
+    if (!response.ok) {
+      console.error('Background: 결제 정보 저장 실패:', response.status, response.statusText);
+      throw new Error('결제 정보 저장에 실패했습니다.');
+    }
+
+    const result = await response.json();
+    console.log('Background: 결제 정보 저장 성공:', result);
+    return result;
+
+  } catch (error) {
+    console.error('Background: 결제 정보 저장 중 오류:', error);
+    throw error;
+  }
+}
+
+/**
+ * 확장 프로그램 생명주기 관리
+ */
 chrome.runtime.onInstalled.addListener((details) => {
   console.log('Background: 확장 프로그램 설치/업데이트:', details.reason);
   
