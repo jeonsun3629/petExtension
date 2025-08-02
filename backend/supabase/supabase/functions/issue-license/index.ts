@@ -165,7 +165,7 @@ serve(async (req) => {
 // PayPal 결제 검증
 async function verifyPayPalPayment(orderId: string): Promise<boolean> {
   try {
-    // 실제 설정된 환경변수 이름으로 수정
+    // Live 환경으로 설정
     const clientId = Deno.env.get('PAYPAL_CLIENT_ID') || 'Afq_c39jZ4MsbzJSMHyeuwy8mnzH-DWYb-sPL1MzMVwDpE2Dv6G-bVp21UMBodhhp78weR-9bPyPRzGE'
     const clientSecret = Deno.env.get('PAYPAL_SECRET_KEY') // 실제 환경변수 이름 사용
     const baseUrl = Deno.env.get('PAYPAL_BASE_URL') || 'https://api-m.paypal.com' // live 환경

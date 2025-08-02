@@ -288,15 +288,30 @@
                     existingScript.remove();
                 }
                 
+                // 확장 프로그램 API 접근을 방지하기 위한 설정
+                const originalChrome = window.chrome;
+                if (typeof chrome !== 'undefined') {
+                    // 임시로 chrome 객체를 숨김
+                    window.chrome = undefined;
+                }
+                
                 const script = document.createElement('script');
-                script.src = 'https://www.paypal.com/sdk/js?client-id=Abs4OksUpVjIL04t4lmPxErQkzzlK-5u5H95Cy0AC5pLa5ipgH8cnFcemI-DRufjjD51dgjI88A1_E6O&currency=USD';
+                script.src = 'https://www.paypal.com/sdk/js?client-id=Afq_c39jZ4MsbzJSMHyeuwy8mnzH-DWYb-sPL1MzMVwDpE2Dv6G-bVp21UMBodhhp78weR-9bPyPRzGE&currency=USD';
                 script.async = true;
                 script.onload = () => {
                     console.log('PayPal SDK 로드 완료');
+                    // chrome 객체 복원
+                    if (originalChrome) {
+                        window.chrome = originalChrome;
+                    }
                     resolve();
                 };
                 script.onerror = (err) => {
                     console.error('PayPal SDK 로드 실패:', err);
+                    // chrome 객체 복원
+                    if (originalChrome) {
+                        window.chrome = originalChrome;
+                    }
                     reject(new Error('PayPal SDK 로드 실패'));
                 };
                 document.head.appendChild(script);
@@ -320,8 +335,10 @@
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
-                                        value: '9.99'
-                                    }
+                                        value: '0.01',
+                                        currency_code: 'USD'
+                                    },
+                                    description: 'Pixel Pet Extension Premium License'
                                 }]
                             });
                         },

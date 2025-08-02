@@ -28,6 +28,7 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
+    "deno": "^2.4.3",
     "supabase": "^2.31.4"
   }
 }
