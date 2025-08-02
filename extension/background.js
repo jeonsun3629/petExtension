@@ -220,7 +220,11 @@ async function processLicenseIssuanceWithRetry(data) {
     try {
       console.log(`Background: 라이선스 발급 시도 ${attempt}/${maxRetries}`);
       
-      const response = await fetch(`${API_CONFIG.supabase.url}/functions/v1/issue-license`, {
+      // Edge Function 대신 직접 Supabase REST API 사용
+      const licenseKey = generateLicenseKey(data.paymentProvider, data.paymentId);
+      
+      // 라이선스 저장
+      const licenseResponse = await fetch(`${API_CONFIG.supabase.url}/rest/v1/licenses`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -228,25 +232,31 @@ async function processLicenseIssuanceWithRetry(data) {
           'Authorization': `Bearer ${API_CONFIG.supabase.anonKey}`
         },
         body: JSON.stringify({
-          paymentProvider: data.paymentProvider,
-          paymentId: data.paymentId,
-          userEmail: data.userEmail,
-          amount: data.amount || 9.99,
-          environment: BUILD_ENVIRONMENT,
-          clientInfo: {
-            buildTime: BUILD_TIME,
-            version: chrome.runtime.getManifest().version
-          }
+          license_key: licenseKey,
+          user_email: data.userEmail,
+          payment_provider: data.paymentProvider,
+          payment_id: data.paymentId,
+          status: 'active',
+          expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
         })
       });
 
-      const result = await response.json();
+      console.log('Background: 라이선스 저장 응답 상태:', licenseResponse.status, licenseResponse.statusText);
       
-      if (response.ok && result.success) {
-        return result;
-      } else {
-        throw new Error(result.error || '라이선스 발급에 실패했습니다.');
+      if (!licenseResponse.ok) {
+        const errorText = await licenseResponse.text();
+        console.error('Background: 라이선스 저장 오류 응답:', errorText);
+        throw new Error(`라이선스 저장 실패: HTTP ${licenseResponse.status} - ${errorText}`);
       }
+
+      const licenseResult = await licenseResponse.json();
+      console.log('Background: 라이선스 저장 성공:', licenseResult);
+      
+      return {
+        success: true,
+        licenseKey: licenseKey,
+        message: '라이선스가 성공적으로 발급되었습니다.'
+      };
       
     } catch (error) {
       lastError = error;
@@ -266,6 +276,17 @@ async function processLicenseIssuanceWithRetry(data) {
     success: false,
     error: lastError?.message || '라이선스 발급에 실패했습니다.'
   };
+}
+
+/**
+ * 라이선스 키 생성 함수
+ */
+function generateLicenseKey(provider, paymentId) {
+  const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const randomPart = Math.random().toString(36).substr(2, 8).toUpperCase();
+  const providerCode = provider.toUpperCase().slice(0, 2);
+  
+  return `${providerCode}${timestamp}${randomPart}`;
 }
 
 /**

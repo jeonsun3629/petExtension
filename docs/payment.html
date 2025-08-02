@@ -388,35 +388,44 @@
                 try {
                     showPaymentProgress(`라이선스를 발급하는 중... (시도 ${attempt}/${maxRetries})`);
                     
-                    const response = await fetch('https://qwbhuusjpnpfwwrzpnfx.supabase.co/functions/v1/issue-license', {
+                    // Edge Function 대신 직접 Supabase REST API 사용
+                    const licenseKey = generateLicenseKey('paypal', paymentId);
+                    
+                    // 라이선스 저장
+                    const licenseResponse = await fetch('https://qwbhuusjpnpfwwrzpnfx.supabase.co/rest/v1/licenses', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTkxNTgsImV4cCI6MjA2ODA3NTE1OH0.G2k1yy6bbnpyi2F6U7cPC1Y6LtBn2nCvfuIUHPXxb9s'
+                            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTkxNTgsImV4cCI6MjA2ODA3NTE1OH0.G2k1yy6bbnpyi2F6U7cPC1Y6LtBn2nCvfuIUHPXxb9s',
+                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTkxNTgsImV4cCI6MjA2ODA3NTE1OH0.G2k1yy6bbnpyi2F6U7cPC1Y6LtBn2nCvfuIUHPXxb9s'
                         },
                         body: JSON.stringify({
-                            paymentProvider: 'paypal',
-                            paymentId,
-                            userEmail,
-                            amount: parseFloat(amount)
+                            license_key: licenseKey,
+                            user_email: userEmail,
+                            payment_provider: 'paypal',
+                            payment_id: paymentId,
+                            status: 'active',
+                            expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
                         })
                     });
                     
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    console.log('라이선스 저장 응답 상태:', licenseResponse.status, licenseResponse.statusText);
+                    
+                    if (!licenseResponse.ok) {
+                        const errorText = await licenseResponse.text();
+                        console.error('라이선스 저장 오류 응답:', errorText);
+                        throw new Error(`라이선스 저장 실패: HTTP ${licenseResponse.status} - ${errorText}`);
                     }
                     
-                    const result = await response.json();
-                    console.log('Supabase 응답:', result);
+                    const licenseResult = await licenseResponse.json();
+                    console.log('라이선스 저장 성공:', licenseResult);
                     
-                    if (result.success) {
-                        // 추가: Supabase에 상세한 결제 정보 저장
-                        await savePaymentDetailsToSupabase(order, result.licenseKey);
-                        handlePaymentSuccess(result.licenseKey);
-                        return; // 성공시 함수 종료
-                    } else {
-                        throw new Error(result.error || '라이선스 발급에 실패했습니다.');
-                    }
+                    // 결제 정보 저장
+                    await savePaymentDetailsToSupabase(order, licenseKey);
+                    
+                    // 성공 처리
+                    handlePaymentSuccess(licenseKey);
+                    return; // 성공시 함수 종료
                     
                 } catch (error) {
                     lastError = error;
@@ -432,6 +441,15 @@
             // 모든 재시도 실패
             console.error('모든 라이선스 발급 시도 실패:', lastError);
             alert('라이선스 발급에 실패했습니다: ' + (lastError?.message || '알 수 없는 오류'));
+        }
+
+        // 라이선스 키 생성 함수
+        function generateLicenseKey(provider, paymentId) {
+            const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            const randomPart = Math.random().toString(36).substr(2, 8).toUpperCase();
+            const providerCode = provider.toUpperCase().slice(0, 2);
+            
+            return `${providerCode}${timestamp}${randomPart}`;
         }
 
         // 토스 결제 처리

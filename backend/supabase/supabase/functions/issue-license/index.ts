@@ -23,7 +23,7 @@ serve(async (req) => {
   }
 
   try {
-    // 요청 헤더에서 인증 정보 확인
+    // 요청 헤더에서 인증 정보 확인 (디버깅용)
     const authHeader = req.headers.get('authorization')
     const apiKey = req.headers.get('apikey')
     
@@ -34,9 +34,24 @@ serve(async (req) => {
       url: req.url
     })
 
-    // Supabase 클라이언트 초기화 (익명키 또는 서비스키 사용)
+    // 인증 검증 (선택적 - 개발 환경에서는 완화)
+    const isAuthenticated = authHeader || apiKey
+    if (!isAuthenticated) {
+      console.warn('인증 헤더가 없지만 계속 진행합니다 (개발 모드)')
+    }
+
+    // Supabase 클라이언트 초기화 (서비스 키 사용)
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseServiceKey = Deno.env.get('SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    
+    if (!supabaseServiceKey) {
+      console.error('SERVICE_ROLE_KEY가 설정되지 않았습니다.')
+      return new Response(
+        JSON.stringify({ success: false, error: '서버 설정 오류' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+    
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
     // 요청 데이터 파싱
