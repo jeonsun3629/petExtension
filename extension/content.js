@@ -193,6 +193,15 @@ class PixelCat {
     if (chrome.runtime && chrome.runtime.onMessage) {
       // 프리미엄 활성화 요청을 위한 추가 리스너
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        // 프리미엄 활성화 메시지 처리
+        if (request.type === 'PREMIUM_ACTIVATED') {
+          console.log('🔐 프리미엄 활성화 메시지 수신:', request.licenseKey);
+          this.handlePremiumActivated(request.licenseKey);
+          sendResponse({ success: true, message: '프리미엄 활성화 처리됨' });
+          return true;
+        }
+        
+        // 기존 액션 기반 메시지 처리
         if (request.action === 'activatePremium' && request.licenseKey) {
           console.log('🔐 프리미엄 활성화 요청 수신:', request.licenseKey);
           
@@ -209,6 +218,54 @@ class PixelCat {
           return true;
         }
       });
+    }
+  }
+
+  // 프리미엄 활성화 처리 (웹페이지에서 받은 메시지)
+  async handlePremiumActivated(licenseKey) {
+    try {
+      console.log('🔐 프리미엄 활성화 처리:', licenseKey);
+      
+      // 로컬 스토리지에 프리미엄 상태 저장
+      await chrome.storage.local.set({
+        'isPremium': true,
+        'pixelcat_premium_license': licenseKey,
+        'licenseActivatedAt': new Date().toISOString()
+      });
+      
+      console.log('🎉 프리미엄 활성화 완료!');
+      
+      // 성공 알림 표시
+      this.showPremiumActivationNotification();
+      
+      // 고양이 스킨을 프리미엄 스킨으로 업데이트
+      this.updatePremiumSkins();
+      
+    } catch (error) {
+      console.error('❌ 프리미엄 활성화 처리 실패:', error);
+    }
+  }
+
+  // 프리미엄 스킨 업데이트
+  updatePremiumSkins() {
+    try {
+      // 프리미엄 스킨 목록
+      const premiumSkins = ['greydog', 'blackdog', 'yellowdog'];
+      
+      // 현재 스킨이 프리미엄 스킨인지 확인
+      if (premiumSkins.includes(this.currentSkin)) {
+        console.log('🎨 프리미엄 스킨이 이미 적용되어 있습니다:', this.currentSkin);
+        return;
+      }
+      
+      // 기본 스킨을 프리미엄 스킨으로 변경
+      this.currentSkin = 'greydog'; // 기본 프리미엄 스킨
+      this.updateCatSkin();
+      
+      console.log('🎨 프리미엄 스킨으로 변경됨:', this.currentSkin);
+      
+    } catch (error) {
+      console.error('❌ 프리미엄 스킨 업데이트 실패:', error);
     }
   }
 

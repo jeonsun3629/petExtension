@@ -17,57 +17,68 @@ const API_CONFIG = {
 };
 
 // 환경 설정 (개발 환경)
-const IS_PRODUCTION = false;
+const IS_PRODUCTION = true;
 const BUILD_TIME = new Date().toISOString();
 const BUILD_ENVIRONMENT = 'development';
 
 // 메시지 리스너 설정
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('Background: 메시지 수신:', request.action);
+  console.log('Background: 메시지 수신:', request);
   
-  switch (request.action) {
-    case 'checkLicense':
-      handleCheckLicense(request.data, sendResponse);
-      return true; // 비동기 응답을 위해 true 반환
-      
-    case 'issueLicense':
-      handleIssueLicense(request.data, sendResponse);
-      return true;
-      
-    case 'getPaymentConfig':
-      handleGetPaymentConfig(request.data, sendResponse);
-      return true;
-      
-    case 'activatePremium':
-      handleActivatePremium(request.data, sendResponse);
-      return true;
-      
-    case 'getBuildInfo':
-      sendResponse({
-        success: true,
-        info: {
-          environment: BUILD_ENVIRONMENT,
-          isProduction: IS_PRODUCTION,
-          buildTime: BUILD_TIME,
-          apiEndpoints: {
-            supabase: API_CONFIG.supabase.url,
-            paypal: API_CONFIG.paypal.baseUrl
+  // 웹페이지에서 온 라이센스 활성화 메시지 처리
+  if (request.type === 'LICENSE_ACTIVATED') {
+    console.log('Background: 라이센스 활성화 메시지 수신:', request.licenseKey);
+    handleLicenseActivated(request.licenseKey);
+    sendResponse({ success: true, message: '라이센스 활성화 처리됨' });
+    return true;
+  }
+  
+  // 기존 액션 기반 메시지 처리
+  if (request.action) {
+    switch (request.action) {
+      case 'checkLicense':
+        handleCheckLicense(request.data, sendResponse);
+        return true; // 비동기 응답을 위해 true 반환
+        
+      case 'issueLicense':
+        handleIssueLicense(request.data, sendResponse);
+        return true;
+        
+      case 'getPaymentConfig':
+        handleGetPaymentConfig(request.data, sendResponse);
+        return true;
+        
+      case 'activatePremium':
+        handleActivatePremium(request.data, sendResponse);
+        return true;
+        
+      case 'getBuildInfo':
+        sendResponse({
+          success: true,
+          info: {
+            environment: BUILD_ENVIRONMENT,
+            isProduction: IS_PRODUCTION,
+            buildTime: BUILD_TIME,
+            apiEndpoints: {
+              supabase: API_CONFIG.supabase.url,
+              paypal: API_CONFIG.paypal.baseUrl
+            }
           }
-        }
-      });
-      return true;
-      
-    case 'checkAutoLicense':
-      handleCheckAutoLicense(request.data, sendResponse);
-      return true;
-      
-    case 'manualLicenseCheck':
-      handleManualLicenseCheck(request.data, sendResponse);
-      return true;
-      
-    default:
-      console.warn('Background: 알 수 없는 액션:', request.action);
-      sendResponse({ success: false, error: 'Unknown action' });
+        });
+        return true;
+        
+      case 'checkAutoLicense':
+        handleCheckAutoLicense(request.data, sendResponse);
+        return true;
+        
+      case 'manualLicenseCheck':
+        handleManualLicenseCheck(request.data, sendResponse);
+        return true;
+        
+      default:
+        console.warn('Background: 알 수 없는 액션:', request.action);
+        sendResponse({ success: false, error: 'Unknown action' });
+    }
   }
 });
 
@@ -536,6 +547,41 @@ async function handleManualLicenseCheck(data, sendResponse) {
   } catch (error) {
     console.error('Background: 수동 라이선스 확인 오류:', error);
     sendResponse({ success: false, error: error.message });
+  }
+}
+
+/**
+ * 웹페이지에서 받은 라이센스 활성화 처리
+ */
+async function handleLicenseActivated(licenseKey) {
+  try {
+    console.log('Background: 라이센스 활성화 처리 시작:', licenseKey);
+    
+    // 라이센스 키를 로컬 스토리지에 저장
+    await chrome.storage.local.set({
+      'pixelcat_premium_license': licenseKey,
+      'isPremium': true,
+      'licenseActivatedAt': new Date().toISOString()
+    });
+    
+    console.log('Background: 라이센스 활성화 완료');
+    
+    // 모든 탭에 프리미엄 활성화 알림
+    const tabs = await chrome.tabs.query({});
+    for (const tab of tabs) {
+      try {
+        await chrome.tabs.sendMessage(tab.id, {
+          type: 'PREMIUM_ACTIVATED',
+          licenseKey: licenseKey
+        });
+      } catch (error) {
+        // 탭에서 메시지를 받을 수 없는 경우 무시
+        console.log('Background: 탭 메시지 전송 실패 (정상):', tab.url);
+      }
+    }
+    
+  } catch (error) {
+    console.error('Background: 라이센스 활성화 처리 오류:', error);
   }
 }
 

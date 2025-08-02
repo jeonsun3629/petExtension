@@ -9,9 +9,15 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["styles/cat-pixel-sprites.css"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles/cat-pixel-sprites.css"
+      ],
       "run_at": "document_end"
     }
   ],
@@ -22,18 +28,36 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["assets/skins/yellowCat.png", "assets/skins/greyCat.png", "assets/skins/calicoCat.png", "assets/skins/yellowCat_icon.png", "assets/skins/greyCat_icon.png", "assets/skins/calicoCat_icon.png", "assets/skins/greyDog.PNG", "assets/skins/blackDog.PNG", "assets/skins/yellowDog.PNG", "assets/skins/greyDog_icon.PNG", "assets/skins/blackDog_icon.PNG", "assets/skins/yellowDog_icon.PNG"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "assets/skins/yellowCat.png",
+        "assets/skins/greyCat.png",
+        "assets/skins/calicoCat.png",
+        "assets/skins/yellowCat_icon.png",
+        "assets/skins/greyCat_icon.png",
+        "assets/skins/calicoCat_icon.png",
+        "assets/skins/greyDog.PNG",
+        "assets/skins/blackDog.PNG",
+        "assets/skins/yellowDog.PNG",
+        "assets/skins/greyDog_icon.PNG",
+        "assets/skins/blackDog_icon.PNG",
+        "assets/skins/yellowDog_icon.PNG"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "externally_connectable": {
-    "matches": ["https://jeonsun3629.github.io/petExtension/*", "https://localhost:3000/*"]
+    "matches": [
+      "https://jeonsun3629.github.io/petExtension/*",
+      "https://localhost:3000/*"
+    ]
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; frame-src https://www.paypal.com;"
+    "extension_pages": "script-src 'self'; object-src 'self'; frame-src https://www.paypal.com; connect-src 'self' https://www.paypal.com https://api-m.paypal.com https://qwbhuusjpnpfwwrzpnfx.supabase.co;"
   },
   "action": {
-     "default_popup": "popup.html",
+    "default_popup": "popup.html",
     "default_title": "픽셀 고양이"
   }
 }
