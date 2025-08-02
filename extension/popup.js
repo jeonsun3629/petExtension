@@ -368,6 +368,21 @@ class CatController {
     const paymentUrl = `https://jeonsun3629.github.io/petExtension/payment.html?extensionId=${extensionId}&method=${paymentMethod}`;
     chrome.tabs.create({ url: paymentUrl });
     this.closePremiumModal();
+    
+    // 결제 페이지가 열린 후 자동 활성화를 위한 리스너 설정
+    this.setupPaymentPageListener();
+  }
+
+  setupPaymentPageListener() {
+    // 결제 페이지에서 보내는 메시지를 받기 위한 리스너
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === 'LICENSE_ACTIVATED') {
+        console.log('결제 페이지에서 라이센스 활성화 메시지 수신:', message.licenseKey);
+        this.activateLicense(message.licenseKey);
+        sendResponse({ success: true, message: '라이센스 활성화 처리됨' });
+        return true;
+      }
+    });
   }
 
   showLicenseInput() {
@@ -381,19 +396,24 @@ class CatController {
     try {
       console.log('라이센스 활성화 시도:', licenseKey);
       
-      // 간단한 라이센스 키 검증 (실제로는 서버에서 검증해야 함)
+      // Supabase에서 라이센스 검증
       const isValid = await this.verifyLicenseKey(licenseKey);
       
       if (isValid) {
         await chrome.storage.local.set({
           'isPremium': true,
           'pixelcat_premium_license': licenseKey,
-          'pixelcat_premium_activated': Date.now().toString()
+          'pixelcat_premium_activated': Date.now().toString(),
+          'premiumActivatedBy': 'payment_page',
+          'premiumActivatedAt': new Date().toISOString()
         });
         
         this.unlockPremiumSkins();
         this.showPremiumActivatedMessage();
         this.closePremiumModal();
+        
+        // 모든 탭에 프리미엄 활성화 알림
+        this.notifyAllTabs(licenseKey);
         
         console.log('✅ 라이센스 활성화 성공!');
       } else {
@@ -405,10 +425,71 @@ class CatController {
     }
   }
 
+  // 모든 탭에 프리미엄 활성화 알림
+  async notifyAllTabs(licenseKey) {
+    try {
+      const tabs = await chrome.tabs.query({});
+      for (const tab of tabs) {
+        try {
+          await chrome.tabs.sendMessage(tab.id, {
+            type: 'PREMIUM_ACTIVATED',
+            licenseKey: licenseKey,
+            activatedAt: new Date().toISOString()
+          });
+        } catch (error) {
+          // 개별 탭 메시지 전송 실패는 무시
+          console.log('탭 메시지 전송 실패 (정상):', tab.url);
+        }
+      }
+      console.log(`✅ ${tabs.length}개 탭에 프리미엄 활성화 알림 전송`);
+    } catch (error) {
+      console.error('탭 알림 전송 실패:', error);
+    }
+  }
+
   async verifyLicenseKey(licenseKey) {
-    // 간단한 라이센스 키 패턴 검증
-    const licensePattern = /^[A-Z]{2}\d{8}[A-Z0-9]{8}$/;
-    return licensePattern.test(licenseKey);
+    try {
+      // Supabase에서 라이센스 검증
+      const response = await fetch('https://qwbhuusjpnpfwwrzpnfx.supabase.co/rest/v1/licenses?license_key=eq.' + encodeURIComponent(licenseKey) + '&status=eq.active', {
+        headers: {
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTkxNTgsImV4cCI6MjA2ODA3NTE1OH0.G2k1yy6bbnpyi2F6U7cPC1Y6LtBn2nCvfuIUHPXxb9s',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTkxNTgsImV4cCI6MjA2ODA3NTE1OH0.G2k1yy6bbnpyi2F6U7cPC1Y6LtBn2nCvfuIUHPXxb9s'
+        }
+      });
+
+      if (response.ok) {
+        const licenses = await response.json();
+        if (licenses && licenses.length > 0) {
+          const license = licenses[0];
+          // 만료일 확인
+          if (license.expires_at) {
+            const expiresAt = new Date(license.expires_at);
+            const now = new Date();
+            if (expiresAt > now) {
+              console.log('✅ 라이센스 검증 성공:', license);
+              return true;
+            } else {
+              console.log('❌ 라이센스 만료됨:', license.expires_at);
+              return false;
+            }
+          } else {
+            console.log('✅ 라이센스 검증 성공 (만료일 없음):', license);
+            return true;
+          }
+        } else {
+          console.log('❌ 라이센스를 찾을 수 없음');
+          return false;
+        }
+      } else {
+        console.error('라이센스 검증 요청 실패:', response.status);
+        return false;
+      }
+    } catch (error) {
+      console.error('라이센스 검증 중 오류:', error);
+      // 네트워크 오류 시 기본 패턴 검증으로 fallback
+      const licensePattern = /^[A-Z]{2}\d{8}[A-Z0-9]{8}$/;
+      return licensePattern.test(licenseKey);
+    }
   }
 
   unlockPremiumSkins() {

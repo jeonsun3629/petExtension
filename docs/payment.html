@@ -537,11 +537,79 @@
                 
                 console.log('라이센스 키 생성 완료:', licenseKey);
                 
-                // 결제 완료 후 안내 메시지 표시
-                console.log('✅ 결제 완료! 라이센스 키:', licenseKey);
+                // 확장 프로그램과 통신하여 자동 활성화 시도
+                tryActivateExtension(licenseKey);
+            }
+        }
+
+        // 확장 프로그램과 통신하여 자동 활성화
+        async function tryActivateExtension(licenseKey) {
+            try {
+                const statusDiv = document.getElementById('activationStatus');
+                if (statusDiv) {
+                    statusDiv.textContent = '🔗 확장 프로그램에 연결 중...';
+                    statusDiv.style.color = '#ffd700';
+                }
+
+                // URL에서 확장 프로그램 ID 가져오기
+                const urlParams = new URLSearchParams(window.location.search);
+                const extensionId = urlParams.get('extensionId');
                 
-                // 웹페이지에서는 확장 프로그램 통신을 시도하지 않음
-                console.log('웹페이지에서 실행 중이므로 확장 프로그램 통신을 건너뜁니다.');
+                if (!extensionId) {
+                    console.log('확장 프로그램 ID가 없습니다. 수동 활성화가 필요합니다.');
+                    if (statusDiv) {
+                        statusDiv.textContent = '⚠️ 확장 프로그램 ID를 찾을 수 없습니다. 수동으로 라이센스 키를 입력해주세요.';
+                        statusDiv.style.color = '#f59e0b';
+                    }
+                    return;
+                }
+
+                // 확장 프로그램에 메시지 전송
+                const message = {
+                    type: 'LICENSE_ACTIVATED',
+                    licenseKey: licenseKey,
+                    source: 'payment_page'
+                };
+
+                // Chrome 확장 프로그램 API를 통해 메시지 전송
+                if (typeof chrome !== 'undefined' && chrome.runtime) {
+                    chrome.runtime.sendMessage(extensionId, message, (response) => {
+                        if (chrome.runtime.lastError) {
+                            console.log('확장 프로그램 통신 실패:', chrome.runtime.lastError);
+                            if (statusDiv) {
+                                statusDiv.textContent = '⚠️ 확장 프로그램 통신 실패. 수동으로 라이센스 키를 입력해주세요.';
+                                statusDiv.style.color = '#f59e0b';
+                            }
+                        } else if (response && response.success) {
+                            console.log('✅ 확장 프로그램 자동 활성화 성공!');
+                            if (statusDiv) {
+                                statusDiv.textContent = '✅ 자동 활성화 성공! 프리미엄 스킨을 사용할 수 있습니다.';
+                                statusDiv.style.color = '#22c55e';
+                            }
+                        } else {
+                            console.log('확장 프로그램 활성화 실패:', response);
+                            if (statusDiv) {
+                                statusDiv.textContent = '⚠️ 자동 활성화 실패. 수동으로 라이센스 키를 입력해주세요.';
+                                statusDiv.style.color = '#f59e0b';
+                            }
+                        }
+                    });
+                } else {
+                    // 웹페이지에서 실행 중인 경우
+                    console.log('웹페이지에서 실행 중이므로 확장 프로그램 통신을 건너뜁니다.');
+                    if (statusDiv) {
+                        statusDiv.textContent = '🌐 웹페이지에서 실행 중입니다. 확장 프로그램에서 라이센스 키를 입력해주세요.';
+                        statusDiv.style.color = '#3b82f6';
+                    }
+                }
+
+            } catch (error) {
+                console.error('확장 프로그램 활성화 중 오류:', error);
+                const statusDiv = document.getElementById('activationStatus');
+                if (statusDiv) {
+                    statusDiv.textContent = '❌ 자동 활성화 중 오류가 발생했습니다. 수동으로 라이센스 키를 입력해주세요.';
+                    statusDiv.style.color = '#ef4444';
+                }
             }
         }
 

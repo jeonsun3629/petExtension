@@ -33,6 +33,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
   
+  // 결제 페이지에서 온 라이센스 활성화 메시지 처리
+  if (request.type === 'LICENSE_ACTIVATED_FROM_PAYMENT') {
+    console.log('Background: 결제 페이지에서 라이센스 활성화 메시지 수신:', request.licenseKey);
+    handleLicenseActivated(request.licenseKey);
+    sendResponse({ success: true, message: '라이센스 활성화 처리됨' });
+    return true;
+  }
+  
   // 기존 액션 기반 메시지 처리
   if (request.action) {
     switch (request.action) {
