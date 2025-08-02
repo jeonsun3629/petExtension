@@ -201,26 +201,22 @@
             <!-- PayPal 버튼이 여기에 렌더링됩니다 -->
             <div id="paypal-button-container"></div>
             
-            <button id="paypalBtn" class="payment-btn paypal-btn" data-i18n="payWithPaypal">
-                💳 PayPal로 결제하기
-            </button>
-            <button id="tossBtn" class="payment-btn toss-btn" data-i18n="payWithToss">
-                💳 토스로 결제하기
-            </button>
             <button id="backBtn" class="payment-btn back-btn" data-i18n="goBack">
                 ← 뒤로가기
             </button>
         </div>
         
+        <!-- 주의사항 -->
+        <div style="margin-top: 20px; padding: 15px; background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; font-size: 14px; line-height: 1.5;">
+            <h4 style="margin: 0 0 10px 0; color: #ffd700;">⚠️ 주의사항</h4>
+            <p style="margin: 0; opacity: 0.9;">
+                결제가 끝난 후에 나오는 라이센스 키를 <strong>"꼭"</strong> 복사하여 확장 프로그램의 <strong>"라이센스 입력"</strong>을 누르고 붙여넣어주세요.
+            </p>
+        </div>
+        
         <div id="successSection" class="success-message">
             <h2 id="paymentCompletedTitle" data-i18n="paymentCompleted">🎉 결제 완료!</h2>
             <p id="purchaseCompletedMsg" data-i18n="premiumSkinPurchaseCompleted">프리미엄 스킨 구매가 완료되었습니다.</p>
-            
-            <div class="auto-activation">
-                <h3 id="autoActivationTitle" data-i18n="autoActivationInProgress">⚡ 자동 활성화 진행중...</h3>
-                <p id="autoActivationMsg" data-i18n="autoActivatingExtension">확장 프로그램에 자동으로 활성화 중입니다.</p>
-                <div id="activationStatus" data-i18n="connectionAttempt">연결 시도 중...</div>
-            </div>
             
             <p><strong id="licenseKeyLabel" data-i18n="licenseKey">라이센스 키:</strong></p>
             <div id="licenseCode" class="license-code"></div>
@@ -335,7 +331,7 @@
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
-                                        value: '0.01',
+                                        value: '2.99',
                                         currency_code: 'USD'
                                     },
                                     description: 'Pixel Pet Extension Premium License'

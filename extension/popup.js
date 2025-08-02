@@ -324,19 +324,10 @@ class CatController {
         <p>모든 프리미엄 스킨을 평생 사용하세요!</p>
         <div style="margin: 20px 0;">
           <button class="premium-button" id="paypalBtn">
-            💳 PayPal로 결제
-          </button>
-          <button class="premium-button" id="tossBtn">
-            💳 토스로 결제
+            💳 결제
           </button>
         </div>
         <div style="margin: 15px 0;">
-          <button class="premium-button secondary" id="autoCheckBtn" style="background: linear-gradient(45deg, #10b981, #34d399); color: white;">
-            🔄 자동 라이센스 확인
-          </button>
-          <button class="premium-button secondary" id="licenseBtn">
-            🔑 라이센스 입력
-          </button>
           <button class="premium-button secondary" id="closeBtn">
             닫기
           </button>
@@ -349,9 +340,6 @@ class CatController {
     
     // 이벤트 리스너 추가
     modal.querySelector('#paypalBtn').addEventListener('click', () => this.openPaymentPage('paypal'));
-    modal.querySelector('#tossBtn').addEventListener('click', () => this.openPaymentPage('toss'));
-    modal.querySelector('#autoCheckBtn').addEventListener('click', () => this.checkSupabaseLicenseManualSecure());
-    modal.querySelector('#licenseBtn').addEventListener('click', () => this.showLicenseInput());
     modal.querySelector('#closeBtn').addEventListener('click', () => this.closePremiumModal());
     
     // 모달 외부 클릭 시 닫기
