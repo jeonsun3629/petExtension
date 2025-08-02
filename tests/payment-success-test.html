@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success Test Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .features {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .features h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        
+        .features ul {
+            list-style: none;
+        }
+        
+        .features li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .features li::before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+        }
+        
+        .success-message {
+            background: linear-gradient(45deg, #22c55e, #16a34a);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            display: block;
+        }
+        
+        .license-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin: 15px 0;
+            border: 2px dashed #ffd700;
+            color: #ffd700;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .warning-note {
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .warning-note h4 {
+            margin: 0 0 10px 0;
+            color: #ffd700;
+        }
+        
+        .warning-note p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .test-controls {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .test-controls h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        
+        .test-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .test-btn {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #333;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+        
+        .test-btn.secondary {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .test-btn.secondary:hover {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+        }
+        
+        .status-message {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .status-message.success {
+            background: rgba(34, 197, 94, 0.3);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+        
+        .status-message.error {
+            background: rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+        
+        .status-message.info {
+            background: rgba(59, 130, 246, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 프리미엄 스킨 구매</h1>
+        <p class="subtitle">픽셀 고양이 확장 프로그램</p>
+        
+        <div class="price">$2.99</div>
+        
+        <div class="features">
+            <h3>포함된 프리미엄 스킨</h3>
+            <ul>
+                <li>회색 강아지 스킨</li>
+                <li>검은 강아지 스킨</li>
+                <li>노란 강아지 스킨</li>
+                <li>향후 추가될 모든 프리미엄 스킨</li>
+                <li>평생 사용 가능</li>
+            </ul>
+        </div>
+        
+        <!-- 결제 완료 섹션 -->
+        <div class="success-message">
+            <h2>🎉 결제 완료!</h2>
+            <p>프리미엄 스킨 구매가 완료되었습니다.</p>
+            
+            <p><strong>라이센스 키:</strong></p>
+            <div class="license-code" id="licenseCode">PA20250802JNRBGKXN</div>
+            <button class="copy-btn" onclick="copyLicenseKey()">📋 복사하기</button>
+            
+            <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+                자동 활성화가 실패한 경우, 위 라이센스 키를 확장 프로그램에 직접 입력해주세요.
+            </p>
+        </div>
+        
+        <!-- 주의사항 -->
+        <div class="warning-note">
+            <h4>⚠️ 주의사항</h4>
+            <p>
+                결제가 끝난 후에 나오는 라이센스 키를 <strong>"꼭"</strong> 복사하여 확장 프로그램의 <strong>"라이센스 입력"</strong>을 누르고 붙여넣어주세요.
+            </p>
+        </div>
+        
+        <!-- 테스트 컨트롤 -->
+        <div class="test-controls">
+            <h3>🧪 테스트 컨트롤</h3>
+            <div class="test-buttons">
+                <button class="test-btn" onclick="generateNewLicense()">새 라이센스 생성</button>
+                <button class="test-btn secondary" onclick="testCopyFunction()">복사 기능 테스트</button>
+                <button class="test-btn secondary" onclick="simulateAutoActivation()">자동 활성화 시뮬레이션</button>
+                <button class="test-btn secondary" onclick="showExtensionInstructions()">확장 프로그램 사용법</button>
+            </div>
+        </div>
+        
+        <!-- 상태 메시지 영역 -->
+        <div id="statusArea"></div>
+    </div>
+
+    <script>
+        // 라이센스 키 복사 기능
+        function copyLicenseKey() {
+            const licenseCode = document.getElementById('licenseCode');
+            const text = licenseCode.textContent;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showStatus('라이센스 키가 클립보드에 복사되었습니다!', 'success');
+                }).catch(err => {
+                    showStatus('복사에 실패했습니다. 수동으로 복사해주세요.', 'error');
+                });
+            } else {
+                // 구형 브라우저 지원
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showStatus('라이센스 키가 클립보드에 복사되었습니다!', 'success');
+                } catch (err) {
+                    showStatus('복사에 실패했습니다. 수동으로 복사해주세요.', 'error');
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+        
+        // 새 라이센스 키 생성
+        function generateNewLicense() {
+            const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            const randomPart = Math.random().toString(36).substr(2, 8).toUpperCase();
+            const newLicense = `PA${timestamp}${randomPart}`;
+            
+            document.getElementById('licenseCode').textContent = newLicense;
+            showStatus(`새 라이센스 키 생성: ${newLicense}`, 'info');
+        }
+        
+        // 복사 기능 테스트
+        function testCopyFunction() {
+            const testText = 'TEST-COPY-' + Date.now();
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(testText).then(() => {
+                    showStatus('✅ 클립보드 복사 기능 정상 작동!', 'success');
+                }).catch(err => {
+                    showStatus('❌ 클립보드 복사 실패: ' + err.message, 'error');
+                });
+            } else {
+                showStatus('⚠️ 클립보드 API를 지원하지 않는 브라우저입니다.', 'info');
+            }
+        }
+        
+        // 자동 활성화 시뮬레이션
+        function simulateAutoActivation() {
+            showStatus('🔗 확장 프로그램에 연결 중...', 'info');
+            
+            setTimeout(() => {
+                showStatus('⚠️ 확장 프로그램 통신 실패. 수동으로 라이센스 키를 입력해주세요.', 'error');
+            }, 2000);
+        }
+        
+        // 확장 프로그램 사용법 표시
+        function showExtensionInstructions() {
+            const instructions = `
+1. 확장 프로그램 아이콘을 클릭하세요
+2. 프리미엄 스킨을 클릭하세요
+3. "라이센스 입력" 버튼을 클릭하세요
+4. 위의 라이센스 키를 붙여넣으세요
+5. 프리미엄 스킨을 사용할 수 있습니다!
+            `;
+            
+            alert('확장 프로그램 사용법:\n' + instructions);
+        }
+        
+        // 상태 메시지 표시
+        function showStatus(message, type) {
+            const statusArea = document.getElementById('statusArea');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status-message ${type}`;
+            statusDiv.textContent = message;
+            statusArea.appendChild(statusDiv);
+            
+            setTimeout(() => {
+                statusDiv.remove();
+            }, 5000);
+        }
+        
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Payment Success Test Page 로드됨');
+            showStatus('결제 완료 페이지가 로드되었습니다.', 'info');
+        });
+    </script>
+</body>
+</html> 
