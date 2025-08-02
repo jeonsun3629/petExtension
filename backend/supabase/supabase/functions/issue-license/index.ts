@@ -43,11 +43,6 @@ serve(async (req) => {
       supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     }
     if (!supabaseServiceKey) {
-      // 문서에 명시된 실제 서비스 롤 키 사용
-      supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjQ5OTE1OCwiZXhwIjoyMDY4MDc1MTU4fQ.kgN693S_DOUxhBawA362-EwXAw4yCKAYs1HAhpAKc_w'
-    }
-    
-    if (!supabaseServiceKey) {
       console.error('서비스 키를 찾을 수 없습니다. 환경변수를 확인하세요.')
       return new Response(
         JSON.stringify({ success: false, error: '서버 설정 오류 - 서비스 키 없음' }),
@@ -57,8 +52,7 @@ serve(async (req) => {
     
     console.log('Supabase 클라이언트 초기화:', {
       url: supabaseUrl,
-      hasServiceKey: !!supabaseServiceKey,
-      serviceKeyPrefix: supabaseServiceKey.substring(0, 10) + '...'
+      hasServiceKey: !!supabaseServiceKey
     })
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey, {

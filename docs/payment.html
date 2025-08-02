@@ -417,27 +417,38 @@
                         throw new Error(`라이선스 저장 실패: HTTP ${licenseResponse.status} - ${errorText}`);
                     }
                     
-                    // JSON 응답이 비어있을 수 있으므로 안전하게 처리
-                    let licenseResult = null;
-                    try {
-                        const responseText = await licenseResponse.text();
-                        if (responseText && responseText.trim()) {
-                            licenseResult = JSON.parse(responseText);
-                        }
-                        console.log('라이선스 저장 성공:', licenseResult);
-                    } catch (jsonError) {
-                        console.log('라이선스 저장 성공 (응답 없음):', licenseResponse.status);
-                        // JSON 파싱 실패해도 HTTP 201이면 성공으로 처리
-                        if (licenseResponse.status === 201) {
-                            console.log('✅ 라이선스 저장 성공 (HTTP 201)');
-                        } else {
-                            throw new Error('라이선스 저장 응답 파싱 실패');
-                        }
+                    // HTTP 201이면 성공으로 처리 (응답 본문은 무시)
+                    if (licenseResponse.status === 201) {
+                        console.log('✅ 라이선스 저장 성공 (HTTP 201)');
+                    } else {
+                        const errorText = await licenseResponse.text();
+                        throw new Error(`라이선스 저장 실패: HTTP ${licenseResponse.status} - ${errorText}`);
                     }
                     
-                    // 결제 정보 저장
+                    // 라이선스 ID 조회
+                    let licenseId = null;
                     try {
-                        await savePaymentDetailsToSupabase(order, licenseKey);
+                        const licenseQueryResponse = await fetch(`https://qwbhuusjpnpfwwrzpnfx.supabase.co/rest/v1/licenses?license_key=eq.${encodeURIComponent(licenseKey)}&select=id`, {
+                            headers: {
+                                'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTkxNTgsImV4cCI6MjA2ODA3NTE1OH0.G2k1yy6bbnpyi2F6U7cPC1Y6LtBn2nCvfuIUHPXxb9s',
+                                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3Ymh1dXNqcG5wZnd3cnpwbmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0OTkxNTgsImV4cCI6MjA2ODA3NTE1OH0.G2k1yy6bbnpyi2F6U7cPC1Y6LtBn2nCvfuIUHPXxb9s'
+                            }
+                        });
+                        
+                        if (licenseQueryResponse.ok) {
+                            const licenses = await licenseQueryResponse.json();
+                            if (licenses && licenses.length > 0) {
+                                licenseId = licenses[0].id;
+                                console.log('✅ 라이선스 ID 조회 성공:', licenseId);
+                            }
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ 라이선스 ID 조회 실패:', error);
+                    }
+                    
+                    // 결제 정보 저장 (라이선스 ID 포함)
+                    try {
+                        await savePaymentDetailsToSupabase(order, licenseKey, licenseId);
                         console.log('✅ 결제 정보 저장 완료');
                     } catch (paymentError) {
                         console.warn('⚠️ 결제 정보 저장 실패 (라이선스는 성공):', paymentError);
@@ -479,7 +490,7 @@
         }
 
         // Supabase에 상세한 결제 정보 저장
-        async function savePaymentDetailsToSupabase(order, licenseKey) {
+        async function savePaymentDetailsToSupabase(order, licenseKey, licenseId = null) {
             try {
                 const paymentData = {
                     payment_provider: 'paypal',
@@ -497,9 +508,13 @@
                         product_description: '프리미엄 스킨 라이선스',
                         license_key: licenseKey
                     },
-                    verified_at: new Date().toISOString(),
-                    created_at: new Date().toISOString()
+                    verified_at: new Date().toISOString()
                 };
+                
+                // license_id가 있으면 추가
+                if (licenseId) {
+                    paymentData.license_id = licenseId;
+                }
 
                 const response = await fetch('https://qwbhuusjpnpfwwrzpnfx.supabase.co/rest/v1/payments', {
                     method: 'POST',
@@ -516,24 +531,14 @@
                     throw new Error('결제 정보 저장에 실패했습니다.');
                 }
 
-                // JSON 응답이 비어있을 수 있으므로 안전하게 처리
-                let result = null;
-                try {
-                    const responseText = await response.text();
-                    if (responseText && responseText.trim()) {
-                        result = JSON.parse(responseText);
-                    }
-                    console.log('결제 정보 저장 성공:', result);
-                } catch (jsonError) {
-                    console.log('결제 정보 저장 성공 (응답 없음):', response.status);
-                    // JSON 파싱 실패해도 HTTP 201이면 성공으로 처리
-                    if (response.status === 201) {
-                        console.log('✅ 결제 정보 저장 성공 (HTTP 201)');
-                    } else {
-                        throw new Error('결제 정보 저장 응답 파싱 실패');
-                    }
+                // HTTP 201이면 성공으로 처리 (응답 본문은 무시)
+                if (response.status === 201) {
+                    console.log('✅ 결제 정보 저장 성공 (HTTP 201)');
+                    return { success: true };
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(`결제 정보 저장 실패: HTTP ${response.status} - ${errorText}`);
                 }
-                return result;
 
             } catch (error) {
                 console.error('결제 정보 저장 중 오류:', error);

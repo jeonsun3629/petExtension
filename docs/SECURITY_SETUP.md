@@ -170,3 +170,46 @@ curl -H "Authorization: Basic $(echo -n 'CLIENT_ID:CLIENT_SECRET' | base64)" \
 ---
 
 **이 가이드를 따라하시면 5분 안에 보안 설정을 완료하고 안전하게 개발을 시작할 수 있습니다!** 🎉 
+
+# 보안 설정 가이드
+
+## 중요: 서비스 키 보안
+
+### ❌ 절대 하지 말아야 할 것들:
+1. **서비스 키를 코드에 하드코딩하지 마세요**
+2. **서비스 키를 Git에 커밋하지 마세요**
+3. **서비스 키를 공개 저장소에 올리지 마세요**
+
+### ✅ 올바른 방법:
+1. **환경변수 사용**: `SERVICE_ROLE_KEY` 또는 `SUPABASE_SERVICE_ROLE_KEY`
+2. **Supabase Dashboard에서 설정**: Edge Functions 환경변수 설정
+3. **로컬 개발**: `.env` 파일 사용 (Git에 포함하지 않음)
+
+## 환경변수 설정
+
+### Supabase Edge Functions
+1. Supabase Dashboard → Settings → API
+2. Service Role Key 복사
+3. Edge Functions → Settings → Environment Variables
+4. `SERVICE_ROLE_KEY` 또는 `SUPABASE_SERVICE_ROLE_KEY`로 설정
+
+### 로컬 개발
+```bash
+# .env 파일 생성 (Git에 포함하지 않음)
+SERVICE_ROLE_KEY=your_service_role_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+```
+
+## 보안 체크리스트
+
+- [ ] 서비스 키가 코드에서 제거됨
+- [ ] 환경변수로 설정됨
+- [ ] `.env` 파일이 `.gitignore`에 포함됨
+- [ ] 공개 저장소에 민감한 정보 없음
+
+## 문제 해결
+
+만약 "서비스 키를 찾을 수 없습니다" 오류가 발생하면:
+1. Supabase Dashboard에서 Service Role Key 확인
+2. Edge Functions 환경변수 설정 확인
+3. 로컬 개발 시 `.env` 파일 확인 
