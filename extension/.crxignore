@@ -1,0 +1,4 @@
+# Chrome Web Store 제출 시 제외할 파일들
+docs/
+*.backup
+*.log 

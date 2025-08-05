@@ -266,7 +266,7 @@
             }
         }
 
-        // PayPal SDK 로드 (로컬 파일 사용)
+        // PayPal SDK 로드 (GitHub Pages용 - 원격 URL 사용)
         function loadPayPalSDK() {
             return new Promise((resolve, reject) => {
                 // 이미 로드된 경우
@@ -277,35 +277,20 @@
                 }
                 
                 // 기존 스크립트 제거
-                const existingScript = document.querySelector('script[src*="paypal-sdk.js"]');
+                const existingScript = document.querySelector('script[src*="paypal.com/sdk"]');
                 if (existingScript) {
                     existingScript.remove();
                 }
                 
-                // 확장 프로그램 API 접근을 방지하기 위한 설정
-                const originalChrome = window.chrome;
-                if (typeof chrome !== 'undefined') {
-                    // 임시로 chrome 객체를 숨김
-                    window.chrome = undefined;
-                }
-                
                 const script = document.createElement('script');
-                script.src = chrome.runtime.getURL('lib/paypal-sdk.js');
+                script.src = 'https://www.paypal.com/sdk/js?client-id=Afq_c39jZ4MsbzJSMHyeuwy8mnzH-DWYb-sPL1MzMVwDpE2Dv6G-bVp21UMBodhhp78weR-9bPyPRzGE&currency=USD';
                 script.async = true;
                 script.onload = () => {
-                    console.log('PayPal SDK 로드 완료 (로컬)');
-                    // chrome 객체 복원
-                    if (originalChrome) {
-                        window.chrome = originalChrome;
-                    }
+                    console.log('PayPal SDK 로드 완료 (GitHub Pages)');
                     resolve();
                 };
                 script.onerror = (err) => {
                     console.error('PayPal SDK 로드 실패:', err);
-                    // chrome 객체 복원
-                    if (originalChrome) {
-                        window.chrome = originalChrome;
-                    }
                     reject(new Error('PayPal SDK 로드 실패'));
                 };
                 document.head.appendChild(script);
@@ -666,8 +651,6 @@
         function goBack() {
             window.close();
         }
-
-
 
         // DOM 로드 완료 후 이벤트 리스너 설정
         document.addEventListener('DOMContentLoaded', () => {

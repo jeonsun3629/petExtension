@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pets in Tabs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Adorable pixel pets that wander around your web pages to keep you company! 🐱🐶✨",
   "default_locale": "ko",
   "background": {
@@ -40,9 +40,7 @@
         "assets/skins/yellowDog.PNG",
         "assets/skins/greyDog_icon.PNG",
         "assets/skins/blackDog_icon.PNG",
-        "assets/skins/yellowDog_icon.PNG",
-        "lib/paypal-sdk.js",
-        "payment.html"
+        "assets/skins/yellowDog_icon.PNG"
       ],
       "matches": [
         "<all_urls>"

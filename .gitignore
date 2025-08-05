@@ -112,6 +112,10 @@ desktop.ini
 *.zip
 web-store-upload.zip
 
+# Chrome Web Store 제출 시 제외할 파일들
+# =====================================
+docs/
+
 # 임시 파일
 # =========
 *.tmp
