@@ -9,10 +9,12 @@
     "package": "npm run build:prod && cd build && node package.js",
     "package:extension": "npm run build:prod && cd build && node package.js --extension-only",
     "package:gh-pages": "npm run build:prod && cd build && node package.js --gh-pages-only",
+    "package:chrome-store": "cd build && node package.js --chrome-store",
     "clean": "cd build && node scripts/clean.js",
     "deploy:gh-pages": "npm run build:prod && echo '✅ Build completed. Push to GitHub to deploy to Pages.'",
     "test:payment": "echo '🧪 Testing payment page...' && echo '🌐 GitHub Pages: https://jeonsun3629.github.io/petExtension/docs/payment.html'",
-    "build:all": "npm run clean && npm run build:prod && npm run package"
+    "build:all": "npm run clean && npm run build:prod && npm run package",
+    "chrome-store": "npm run package:chrome-store"
   },
   "devDependencies": {
     "archiver": "^5.3.1",
