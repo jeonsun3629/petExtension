@@ -226,7 +226,7 @@
         </div>
     </div>
 
-    <!-- GitHub Pages용 스크립트 -->
+    <!-- 확장 프로그램용 스크립트 -->
     <script>
         // 다국어 지원 함수
         function loadI18nText() {
@@ -282,30 +282,15 @@
                     existingScript.remove();
                 }
                 
-                // 확장 프로그램 API 접근을 방지하기 위한 설정
-                const originalChrome = window.chrome;
-                if (typeof chrome !== 'undefined') {
-                    // 임시로 chrome 객체를 숨김
-                    window.chrome = undefined;
-                }
-                
                 const script = document.createElement('script');
                 script.src = chrome.runtime.getURL('lib/paypal-sdk.js');
                 script.async = true;
                 script.onload = () => {
                     console.log('PayPal SDK 로드 완료 (로컬)');
-                    // chrome 객체 복원
-                    if (originalChrome) {
-                        window.chrome = originalChrome;
-                    }
                     resolve();
                 };
                 script.onerror = (err) => {
                     console.error('PayPal SDK 로드 실패:', err);
-                    // chrome 객체 복원
-                    if (originalChrome) {
-                        window.chrome = originalChrome;
-                    }
                     reject(new Error('PayPal SDK 로드 실패'));
                 };
                 document.head.appendChild(script);
@@ -667,11 +652,9 @@
             window.close();
         }
 
-
-
         // DOM 로드 완료 후 이벤트 리스너 설정
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('GitHub Pages 결제 페이지 로드됨');
+            console.log('확장 프로그램 결제 페이지 로드됨');
             
             // 다국어 텍스트 로드
             loadI18nText();

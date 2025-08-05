@@ -40,7 +40,9 @@
         "assets/skins/yellowDog.PNG",
         "assets/skins/greyDog_icon.PNG",
         "assets/skins/blackDog_icon.PNG",
-        "assets/skins/yellowDog_icon.PNG"
+        "assets/skins/yellowDog_icon.PNG",
+        "lib/paypal-sdk.js",
+        "payment.html"
       ],
       "matches": [
         "<all_urls>"
