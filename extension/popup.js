@@ -327,6 +327,11 @@ class CatController {
             💳 결제
           </button>
         </div>
+        <div style="margin: 10px 0;">
+          <button class="premium-button secondary" id="enterLicenseBtn">
+            🔑 라이센스 입력
+          </button>
+        </div>
         <div style="margin: 15px 0;">
           <button class="premium-button secondary" id="closeBtn">
             닫기
@@ -340,6 +345,7 @@ class CatController {
     
     // 이벤트 리스너 추가
     modal.querySelector('#paypalBtn').addEventListener('click', () => this.openPaymentPage('paypal'));
+    modal.querySelector('#enterLicenseBtn').addEventListener('click', () => this.showLicenseInput());
     modal.querySelector('#closeBtn').addEventListener('click', () => this.closePremiumModal());
     
     // 모달 외부 클릭 시 닫기
