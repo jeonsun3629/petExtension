@@ -57,7 +57,7 @@ class PixelCat {
     this.behaviorDuration = 3000;
     
     // 새로운 마우스 따라다니기 기능
-    this.followMouse = false;
+    this.followMouse = true;
     this.mousePosition = { x: 0, y: 0 };
     this.lastMouseMove = Date.now();
     this.targetPosition = { x: 100, y: 100 };
@@ -77,7 +77,7 @@ class PixelCat {
     try {
       const result = await chrome.storage.local.get(['catActive', 'followMouse', 'catSpeed', 'catSkin', 'catSize']);
       this.catActive = result.catActive !== undefined ? result.catActive : true;
-      this.followMouse = result.followMouse || false;
+      this.followMouse = result.followMouse !== false;
       this.speed = result.catSpeed || 1;
       this.currentSkin = result.catSkin || 'yellow';
       this.size = result.catSize || 32;

@@ -96,7 +96,7 @@ class CatController {
       const result = await chrome.storage.local.get(['catActive', 'followMouse', 'catSpeed', 'catSkin', 'catSize']);
       
       this.catActiveToggle.checked = result.catActive !== false;
-      this.followMouseToggle.checked = result.followMouse === true;
+      this.followMouseToggle.checked = result.followMouse !== false;
       this.speedSlider.value = result.catSpeed || 1;
       this.sizeSlider.value = result.catSize || 32;
       
