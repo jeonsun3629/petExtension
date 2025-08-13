@@ -71,6 +71,10 @@ class CatController {
       document.getElementById('catSpeedLabel').textContent = chrome.i18n.getMessage('moveSpeed') || '이동 속도';
       document.getElementById('catSizeLabel').textContent = chrome.i18n.getMessage('catSize') || '크기 설정';
       document.getElementById('catSkinLabel').textContent = chrome.i18n.getMessage('catSkin') || '스킨 선택';
+ 	      const catSkinsTitleEl = document.getElementById('catSkinsSectionTitle');
+ 	      if (catSkinsTitleEl) catSkinsTitleEl.textContent = chrome.i18n.getMessage('catSkinsSectionTitle') || '고양이 스킨';
+ 	      const premiumDogSkinsTitleEl = document.getElementById('premiumDogSkinsSectionTitle');
+ 	      if (premiumDogSkinsTitleEl) premiumDogSkinsTitleEl.textContent = chrome.i18n.getMessage('premiumDogSkinsSectionTitle') || '프리미엄 강아지 스킨';
     } catch (error) {
       console.warn('⚠️ i18n 메시지 로드 실패:', error);
     }
@@ -308,7 +312,7 @@ class CatController {
     }
   }
 
-  showPremiumModal(skinType) {
+	  showPremiumModal(skinType) {
     // 기존 모달이 있으면 제거
     if (this.premiumModal) {
       this.premiumModal.remove();
@@ -316,29 +320,35 @@ class CatController {
 
     const modal = document.createElement('div');
     modal.className = 'premium-modal';
-    modal.innerHTML = `
-      <div class="premium-content">
-        <h2>🌟 프리미엄 스킨</h2>
-        <p>이 스킨은 프리미엄 버전에서만 사용할 수 있습니다.</p>
-        <div class="premium-price">$2.99</div>
-        <p>모든 프리미엄 스킨을 평생 사용하세요!</p>
-        <div style="margin: 20px 0;">
-          <button class="premium-button" id="paypalBtn">
-            💳 결제
-          </button>
+    const titleText = chrome.i18n.getMessage('premiumModalTitle') || '🌟 프리미엄 스킨';
+    const onlyPremiumText = chrome.i18n.getMessage('premiumModalOnlyPremium') || '이 스킨은 프리미엄 버전에서만 사용할 수 있습니다.';
+    const originalPrice = chrome.i18n.getMessage('originalPrice') || '$2.99';
+    const discountedPrice = chrome.i18n.getMessage('discountedPrice') || '$0.99';
+	    const lifetimeText = chrome.i18n.getMessage('premiumModalLifetimeMessage') || '모든 프리미엄 스킨을 평생 사용하세요!';
+	    const payBtnText = chrome.i18n.getMessage('premiumPayButton') || '💳 결제';
+	    const enterLicenseBtnText = chrome.i18n.getMessage('enterLicenseButton') || '🔑 라이센스 입력';
+	    const closeBtnText = chrome.i18n.getMessage('closeButton') || '닫기';
+
+	    modal.innerHTML = `
+	      <div class="premium-content">
+	        <h2>${titleText}</h2>
+	        <p>${onlyPremiumText}</p>
+        <div class="premium-price">
+          <span style="text-decoration: line-through; opacity: 0.8; margin-right: 8px;">${originalPrice}</span>
+          <span style="font-weight: 800; color: #ffd700;">${discountedPrice}</span>
         </div>
-        <div style="margin: 10px 0;">
-          <button class="premium-button secondary" id="enterLicenseBtn">
-            🔑 라이센스 입력
-          </button>
-        </div>
-        <div style="margin: 15px 0;">
-          <button class="premium-button secondary" id="closeBtn">
-            닫기
-          </button>
-        </div>
-      </div>
-    `;
+	        <p>${lifetimeText}</p>
+	        <div style="margin: 20px 0;">
+	          <button class="premium-button" id="paypalBtn">${payBtnText}</button>
+	        </div>
+	        <div style="margin: 10px 0;">
+	          <button class="premium-button secondary" id="enterLicenseBtn">${enterLicenseBtnText}</button>
+	        </div>
+	        <div style="margin: 15px 0;">
+	          <button class="premium-button secondary" id="closeBtn">${closeBtnText}</button>
+	        </div>
+	      </div>
+	    `;
     
     document.body.appendChild(modal);
     this.premiumModal = modal;
@@ -359,7 +369,9 @@ class CatController {
   openPaymentPage(paymentMethod) {
     // 확장 프로그램 ID를 가져와서 결제 페이지에 전달
     const extensionId = chrome.runtime.id;
-    const paymentUrl = `https://jeonsun3629.github.io/petExtension/payment.html?extensionId=${extensionId}&method=${paymentMethod}`;
+    const amount = '0.99';
+    const currency = 'USD';
+    const paymentUrl = `https://jeonsun3629.github.io/petExtension/payment.html?extensionId=${extensionId}&method=${paymentMethod}&amount=${amount}&currency=${currency}`;
     chrome.tabs.create({ url: paymentUrl });
     this.closePremiumModal();
     
@@ -380,7 +392,8 @@ class CatController {
   }
 
   showLicenseInput() {
-    const licenseKey = prompt('라이센스 키를 입력해주세요:');
+	    const promptText = chrome.i18n.getMessage('enterLicensePrompt') || '라이센스 키를 입력해주세요:';
+	    const licenseKey = prompt(promptText);
     if (licenseKey) {
       this.activateLicense(licenseKey);
     }
@@ -502,10 +515,10 @@ class CatController {
     }
   }
 
-  showPremiumActivatedMessage() {
+	  showPremiumActivatedMessage() {
     const message = document.createElement('div');
     message.className = 'save-confirmation';
-    message.innerHTML = '🎉 프리미엄 스킨 활성화됨!';
+	    message.innerHTML = chrome.i18n.getMessage('premiumActivated') || '🎉 프리미엄 스킨 활성화됨!';
     message.style.background = 'linear-gradient(45deg, #ffd700, #ffed4e)';
     message.style.color = '#333';
     document.body.appendChild(message);
@@ -581,10 +594,10 @@ class CatController {
   }
 
   // 자동 활성화 메시지 표시
-  showAutoActivationMessage() {
+	  showAutoActivationMessage() {
     const message = document.createElement('div');
     message.className = 'save-confirmation';
-    message.innerHTML = '🔄 자동 라이선스 감지됨!';
+	    message.innerHTML = chrome.i18n.getMessage('autoLicenseDetected') || '🔄 자동 라이선스 감지됨!';
     message.style.background = 'linear-gradient(45deg, #10b981, #34d399)';
     message.style.color = 'white';
     document.body.appendChild(message);
@@ -632,7 +645,7 @@ class CatController {
                     <span style="font-size: 12px;">👤</span>
                     <span style="font-size: 11px; font-weight: 500;">${userInfo.email}</span>
                   </div>
-                  <div style="font-size: 9px; opacity: 0.8; margin-top: 2px;">Chrome 로그인 계정</div>
+                  <div style="font-size: 9px; opacity: 0.8; margin-top: 2px;">${chrome.i18n.getMessage('chromeLoginAccountLabel') || 'Chrome 로그인 계정'}</div>
                 </div>
               `;
               console.log('Chrome 사용자 정보 표시:', userInfo.email);
@@ -644,7 +657,7 @@ class CatController {
                   border-radius: 5px; 
                   border: 1px solid rgba(255,255,255,0.1);
                 ">
-                  <div style="font-size: 10px; opacity: 0.7;">Chrome 로그인 없음</div>
+                  <div style="font-size: 10px; opacity: 0.7;">${chrome.i18n.getMessage('noChromeLogin') || 'Chrome 로그인 없음'}</div>
                 </div>
               `;
             }

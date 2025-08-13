@@ -103,5 +103,50 @@
   },
   "autoActivationFailureNote": {
     "message": "如果自动激活失败，请在扩展程序中手动输入许可证密钥。"
+  },
+  "catSkinsSectionTitle": {
+    "message": "猫咪皮肤"
+  },
+  "premiumDogSkinsSectionTitle": {
+    "message": "高级狗狗皮肤"
+  },
+  "premiumModalTitle": {
+    "message": "🌟 高级皮肤"
+  },
+  "premiumModalOnlyPremium": {
+    "message": "此皮肤仅在高级版本中可用。"
+  },
+  "premiumModalLifetimeMessage": {
+    "message": "终身使用所有高级皮肤！"
+  },
+  "premiumPayButton": {
+    "message": "💳 支付"
+  },
+  "enterLicenseButton": {
+    "message": "🔑 输入许可证"
+  },
+  "closeButton": {
+    "message": "关闭"
+  },
+  "premiumActivated": {
+    "message": "🎉 高级皮肤已激活！"
+  },
+  "autoLicenseDetected": {
+    "message": "🔄 检测到自动许可证！"
+  },
+  "enterLicensePrompt": {
+    "message": "请输入您的许可证密钥："
+  },
+  "chromeLoginAccountLabel": {
+    "message": "Chrome 登录账号"
+  },
+  "noChromeLogin": {
+    "message": "未登录 Chrome"
+  },
+  "originalPrice": {
+    "message": "$2.99"
+  },
+  "discountedPrice": {
+    "message": "$0.99"
   }
 } 

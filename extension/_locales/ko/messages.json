@@ -103,5 +103,50 @@
   },
   "autoActivationFailureNote": {
     "message": "자동 활성화가 실패한 경우, 위 라이센스 키를 확장 프로그램에 직접 입력해주세요."
+  },
+  "catSkinsSectionTitle": {
+    "message": "고양이 스킨"
+  },
+  "premiumDogSkinsSectionTitle": {
+    "message": "프리미엄 강아지 스킨"
+  },
+  "premiumModalTitle": {
+    "message": "🌟 프리미엄 스킨"
+  },
+  "premiumModalOnlyPremium": {
+    "message": "이 스킨은 프리미엄 버전에서만 사용할 수 있습니다."
+  },
+  "premiumModalLifetimeMessage": {
+    "message": "모든 프리미엄 스킨을 평생 사용하세요!"
+  },
+  "premiumPayButton": {
+    "message": "💳 결제"
+  },
+  "enterLicenseButton": {
+    "message": "🔑 라이센스 입력"
+  },
+  "closeButton": {
+    "message": "닫기"
+  },
+  "premiumActivated": {
+    "message": "🎉 프리미엄 스킨 활성화됨!"
+  },
+  "autoLicenseDetected": {
+    "message": "🔄 자동 라이선스 감지됨!"
+  },
+  "enterLicensePrompt": {
+    "message": "라이센스 키를 입력해주세요:"
+  },
+  "chromeLoginAccountLabel": {
+    "message": "Chrome 로그인 계정"
+  },
+  "noChromeLogin": {
+    "message": "Chrome 로그인 없음"
+  },
+  "originalPrice": {
+    "message": "$2.99"
+  },
+  "discountedPrice": {
+    "message": "$0.99"
   }
 } 

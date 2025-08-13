@@ -103,5 +103,50 @@
   },
   "autoActivationFailureNote": {
     "message": "Si l'activation automatique échoue, veuillez saisir manuellement la clé de licence dans l'extension."
+  },
+  "catSkinsSectionTitle": {
+    "message": "Skins de Chat"
+  },
+  "premiumDogSkinsSectionTitle": {
+    "message": "Skins de Chien Premium"
+  },
+  "premiumModalTitle": {
+    "message": "🌟 Skins Premium"
+  },
+  "premiumModalOnlyPremium": {
+    "message": "Ces skins sont disponibles uniquement dans la version premium."
+  },
+  "premiumModalLifetimeMessage": {
+    "message": "Utilisez tous les skins premium à vie !"
+  },
+  "premiumPayButton": {
+    "message": "💳 Payer"
+  },
+  "enterLicenseButton": {
+    "message": "🔑 Saisir la licence"
+  },
+  "closeButton": {
+    "message": "Fermer"
+  },
+  "premiumActivated": {
+    "message": "🎉 Skins premium activés !"
+  },
+  "autoLicenseDetected": {
+    "message": "🔄 Licence automatique détectée !"
+  },
+  "enterLicensePrompt": {
+    "message": "Veuillez saisir votre clé de licence :"
+  },
+  "chromeLoginAccountLabel": {
+    "message": "Compte connecté à Chrome"
+  },
+  "noChromeLogin": {
+    "message": "Aucune connexion Chrome"
+  },
+  "originalPrice": {
+    "message": "$2.99"
+  },
+  "discountedPrice": {
+    "message": "$0.99"
   }
 } 

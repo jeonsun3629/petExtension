@@ -103,5 +103,50 @@
   },
   "autoActivationFailureNote": {
     "message": "If auto-activation fails, please manually enter the license key in the extension."
+  },
+  "catSkinsSectionTitle": {
+    "message": "Cat Skins"
+  },
+  "premiumDogSkinsSectionTitle": {
+    "message": "Premium Dog Skins"
+  },
+  "premiumModalTitle": {
+    "message": "🌟 Premium Skins"
+  },
+  "premiumModalOnlyPremium": {
+    "message": "These skins are available only in the premium version."
+  },
+  "premiumModalLifetimeMessage": {
+    "message": "Use all premium skins for life!"
+  },
+  "premiumPayButton": {
+    "message": "💳 Pay"
+  },
+  "enterLicenseButton": {
+    "message": "🔑 Enter License"
+  },
+  "closeButton": {
+    "message": "Close"
+  },
+  "premiumActivated": {
+    "message": "🎉 Premium skins activated!"
+  },
+  "autoLicenseDetected": {
+    "message": "🔄 Auto license detected!"
+  },
+  "enterLicensePrompt": {
+    "message": "Please enter your license key:"
+  },
+  "chromeLoginAccountLabel": {
+    "message": "Chrome signed-in account"
+  },
+  "noChromeLogin": {
+    "message": "No Chrome sign-in"
+  },
+  "originalPrice": {
+    "message": "$2.99"
+  },
+  "discountedPrice": {
+    "message": "$0.99"
   }
 } 

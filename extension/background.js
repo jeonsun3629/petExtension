@@ -419,7 +419,7 @@ async function savePaymentDetailsToSupabase(paymentData, licenseKey) {
     const paymentRecord = {
       payment_provider: paymentData.paymentProvider,
       payment_id: paymentData.paymentId,
-      amount: parseFloat(paymentData.amount || 9.99),
+      amount: parseFloat(paymentData.amount || 0.99),
       currency: 'USD',
       status: 'completed',
       payment_data: {
