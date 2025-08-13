@@ -334,17 +334,26 @@ class CatController {
 	      <div class="premium-content">
 	        <h2>${titleText}</h2>
 	        <p>${onlyPremiumText}</p>
+	        
+	        <!-- 할인 배지 -->
+	        <div class="discount-badge">
+	          <span class="discount-text">${chrome.i18n.getMessage('discountBadge') || '🔥 67% OFF'}</span>
+	        </div>
+	        
 	        <div class="premium-price">
-	          <span class="price-old" style="text-decoration: line-through; opacity: 0.8; margin-right: 12px;">
+	          <span class="price-old" style="text-decoration: line-through; opacity: 0.7; margin-right: 15px; font-size: 20px; color: #ff6b6b;">
 	            <span class="currency">${currencySymbol}</span><span class="amount">${originalPriceValue}</span>
 	          </span>
-	          <span class="price-new" style="font-weight: 800; color: #ffd700;">
+	          <span class="price-new" style="font-weight: 900; color: #00ff88; font-size: 32px; text-shadow: 0 0 10px rgba(0,255,136,0.5);">
 	            <span class="currency">${currencySymbol}</span><span class="amount">${discountedPriceValue}</span>
 	          </span>
 	        </div>
+	        
+
+	        
 	        <p>${lifetimeText}</p>
 	        <div style="margin: 20px 0;">
-	          <button class="premium-button" id="paypalBtn">${payBtnText}</button>
+	          <button class="premium-button pulse-animation" id="paypalBtn">${payBtnText}</button>
 	        </div>
 	        <div style="margin: 10px 0;">
 	          <button class="premium-button secondary" id="enterLicenseBtn">${enterLicenseBtnText}</button>

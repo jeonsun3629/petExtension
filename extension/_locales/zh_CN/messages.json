@@ -157,5 +157,8 @@
   },
   "discountedPriceValue": {
     "message": "0.99"
+  },
+  "discountBadge": {
+    "message": "🔥 现在67%折扣"
   }
 } 
