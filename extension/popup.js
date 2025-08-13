@@ -320,10 +320,11 @@ class CatController {
 
     const modal = document.createElement('div');
     modal.className = 'premium-modal';
-    const titleText = chrome.i18n.getMessage('premiumModalTitle') || '🌟 프리미엄 스킨';
-    const onlyPremiumText = chrome.i18n.getMessage('premiumModalOnlyPremium') || '이 스킨은 프리미엄 버전에서만 사용할 수 있습니다.';
-    const originalPrice = chrome.i18n.getMessage('originalPrice') || '$2.99';
-    const discountedPrice = chrome.i18n.getMessage('discountedPrice') || '$0.99';
+	    const titleText = chrome.i18n.getMessage('premiumModalTitle') || '🌟 프리미엄 스킨';
+	    const onlyPremiumText = chrome.i18n.getMessage('premiumModalOnlyPremium') || '이 스킨은 프리미엄 버전에서만 사용할 수 있습니다.';
+	    const currencySymbol = chrome.i18n.getMessage('currencySymbol') || '$';
+	    const originalPriceValue = chrome.i18n.getMessage('originalPriceValue') || '2.99';
+	    const discountedPriceValue = chrome.i18n.getMessage('discountedPriceValue') || '0.99';
 	    const lifetimeText = chrome.i18n.getMessage('premiumModalLifetimeMessage') || '모든 프리미엄 스킨을 평생 사용하세요!';
 	    const payBtnText = chrome.i18n.getMessage('premiumPayButton') || '💳 결제';
 	    const enterLicenseBtnText = chrome.i18n.getMessage('enterLicenseButton') || '🔑 라이센스 입력';
@@ -333,10 +334,14 @@ class CatController {
 	      <div class="premium-content">
 	        <h2>${titleText}</h2>
 	        <p>${onlyPremiumText}</p>
-        <div class="premium-price">
-          <span style="text-decoration: line-through; opacity: 0.8; margin-right: 8px;">${originalPrice}</span>
-          <span style="font-weight: 800; color: #ffd700;">${discountedPrice}</span>
-        </div>
+	        <div class="premium-price">
+	          <span class="price-old" style="text-decoration: line-through; opacity: 0.8; margin-right: 12px;">
+	            <span class="currency">${currencySymbol}</span><span class="amount">${originalPriceValue}</span>
+	          </span>
+	          <span class="price-new" style="font-weight: 800; color: #ffd700;">
+	            <span class="currency">${currencySymbol}</span><span class="amount">${discountedPriceValue}</span>
+	          </span>
+	        </div>
 	        <p>${lifetimeText}</p>
 	        <div style="margin: 20px 0;">
 	          <button class="premium-button" id="paypalBtn">${payBtnText}</button>

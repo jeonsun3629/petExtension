@@ -148,5 +148,14 @@
   },
   "discountedPrice": {
     "message": "$0.99"
+  },
+  "currencySymbol": {
+    "message": "$"
+  },
+  "originalPriceValue": {
+    "message": "2.99"
+  },
+  "discountedPriceValue": {
+    "message": "0.99"
   }
 } 
