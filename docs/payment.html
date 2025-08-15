@@ -184,7 +184,17 @@
         <h1 id="mainTitle" data-i18n="premiumSkinPurchase">🌟 프리미엄 스킨 구매</h1>
         <p id="subtitle" class="subtitle" data-i18n="pixelCatExtension">픽셀 고양이 확장 프로그램</p>
         
-        <div id="price" class="price" data-i18n="priceKRW">$2.99</div>
+        <div id="price" class="price">
+          <span class="price-old" style="text-decoration: line-through; opacity: 0.7; margin-right: 15px; font-size: 24px; color: #ff6b6b;">
+            $2.99
+          </span>
+          <span class="price-new" style="font-weight: 900; color: #00ff88; font-size: 36px; text-shadow: 0 0 10px rgba(0,255,136,0.5);">
+            $0.99
+          </span>
+          <div style="margin-top: 10px; font-size: 16px; color: #ffd700; font-weight: bold;">
+            🔥 67% OFF!
+          </div>
+        </div>
         
         <div class="features">
             <h3 id="featuresTitle" data-i18n="includedPremiumSkins">포함된 프리미엄 스킨</h3>
@@ -314,7 +324,7 @@
                             return actions.order.create({
                                 purchase_units: [{
                                     amount: {
-                                        value: '2.99',
+                                        value: '0.99',
                                         currency_code: 'USD'
                                     },
                                     description: 'Pixel Pet Extension Premium License'
