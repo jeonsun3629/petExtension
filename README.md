@@ -100,7 +100,7 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 ### 결제 페이지 개발
 - `docs/payment.html` 수정
 - GitHub Pages에 자동 배포됨
-- [https://jeonsun3629.github.io/petExtension/payment.html]에서 확인
+- [https://jeonsun3629.github.io/petExtension/payment.html] 에서 확인
 
 ## 🌐 배포
 
