@@ -28,25 +28,6 @@ npm run build:dev
 npm run build:prod
 ```
 
-### Chrome 확장프로그램 설치
-
-1. Chrome에서 `chrome://extensions/` 접속
-2. 개발자 모드 활성화
-3. "압축해제된 확장 프로그램을 로드합니다" 클릭
-4. `dist` 폴더 선택
-
-## 💳 결제 시스템
-
-### PayPal 결제
-- **GitHub Pages**: https://jeonsun3629.github.io/petExtension/docs/payment.html
-- **결제 금액**: $2.99
-- **환경**: Sandbox (테스트용)
-
-### 결제 테스트
-```bash
-npm run test:payment
-```
-
 ## 📦 빌드 및 패키징
 
 ### 기본 빌드
