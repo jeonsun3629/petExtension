@@ -28,7 +28,7 @@
       <p>Turn the switch off to stop sharing. When the extension next reaches the server, we remove your measurements and their checkout links. We retain a digest of the retired random identifier to discard late events. You can buy and restore either pet regardless of this setting.</p>
       <h2>Google sign-in and paid pets</h2>
       <p>Signing in is optional. Sign in to buy a pet or restore a previous account purchase.</p>
-      <p>When you choose Google sign-in, Google shares the account identifier, email address and basic profile information shown on its consent screen with Supabase, our authentication provider. We use the account identifier to check which pets you own. Chrome keeps the sign-in session in extension session storage. Signing out or ending the browser session clears these local sign-in credentials.</p>
+      <p>When you choose Google sign-in, Google shares the account identifier, email address and basic profile information shown on its consent screen with Supabase, our authentication provider. Supabase records the IP address you use to sign in as part of your authentication session. We use the account identifier to check which pets you own. Chrome keeps the sign-in session in extension session storage. Signing out or ending the browser session clears these local sign-in credentials.</p>
       <p>When you start a purchase, our service creates a checkout reference for your account and opens a Paddle payment page. Paddle handles billing details, including the email address and payment method you enter. Paddle sends payment and refund notices to our Supabase service. We use account, transaction and pet identifiers and the payment or refund status to grant, restore or remove access to the pet. Card details are handled by Paddle.</p>
       <p>The extension caches your account identifier, owned pets, last verification time and any pending purchase in local storage. It refreshes ownership from the server while you are signed in. Signing out clears this cached purchase information. Server order records are kept so you can recover your pets when you sign back in, including after you uninstall the extension.</p>
 
@@ -51,7 +51,7 @@
       <p>공유를 끄면 수집이 중단됩니다. 다음 서버 연결 때 기존 통계와 거래 연결을 지웁니다. 늦게 도착한 기록을 제외할 수 있도록 이전 임의 번호의 해시만 남깁니다. 통계 참여 여부와 관계없이 두 펫을 구매하고 복원할 수 있습니다.</p>
       <h2>Google 로그인과 유료 펫</h2>
       <p>Google 로그인은 선택 사항입니다. 로그인하면 유료 펫을 구매하거나 같은 계정의 구매 내역을 복원할 수 있습니다.</p>
-      <p>Google 로그인을 선택하면 Google은 동의 화면에 안내한 계정 식별자, 이메일 주소, 기본 프로필 정보를 인증 서비스인 Supabase에 전달합니다. Pets in Tabs는 계정 식별자를 사용해 보유한 펫을 확인합니다. 로그인 세션은 Chrome의 확장 프로그램 세션 저장소에 보관합니다. 로그아웃하거나 브라우저 세션을 종료하면 기기에 있던 로그인 인증 정보가 지워집니다.</p>
+      <p>Google 로그인을 선택하면 Google은 동의 화면에 안내한 계정 식별자, 이메일 주소, 기본 프로필 정보를 인증 서비스인 Supabase에 전달합니다. Supabase는 로그인할 때 사용한 IP 주소를 인증 세션에 기록합니다. Pets in Tabs는 계정 식별자를 사용해 보유한 펫을 확인합니다. 로그인 세션은 Chrome의 확장 프로그램 세션 저장소에 보관합니다. 로그아웃하거나 브라우저 세션을 종료하면 기기에 있던 로그인 인증 정보가 지워집니다.</p>
       <p>구매를 시작하면 Pets in Tabs 서버가 계정에 연결된 결제 요청 번호를 만들고 Paddle 결제창을 엽니다. 결제창에서 입력한 이메일과 결제 수단은 Paddle이 처리합니다. Paddle은 구매·환불 통지를 Supabase의 Pets in Tabs 서버로 보냅니다. 서버는 펫을 지급하거나 복원하고 환불을 반영하기 위해 계정·거래·펫 식별자와 결제·환불 상태를 기록합니다. 카드 정보는 Paddle이 처리합니다.</p>
       <p>확장 프로그램은 계정 식별자, 보유한 펫, 마지막 구매 확인 시각, 진행 중인 결제 요청을 기기에 임시 저장합니다. 로그인 중에는 서버에서 보유 상태를 다시 확인합니다. 로그아웃하면 기기에 임시 저장한 계정 구매 정보는 지워집니다. 확장 프로그램을 삭제한 뒤에도 같은 계정으로 로그인해 펫을 복원할 수 있도록 서버에는 주문 기록을 보관합니다.</p>
 
